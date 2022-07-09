@@ -30,7 +30,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	//两次绘图间隔的时间
 	private final int DRAW_TIME = 5;//1000 / 200;
 	//距离右边的距离,根据自己喜好，也可以为0.
-	private final int MARGIN_RIGHT=30;
+	private final int MARGIN_RIGHT=0;
 
 	private SurfaceHolder holder;
 	//上下圆的画笔
@@ -46,7 +46,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	//基线与标识圆的x值
 //	private int markerX=0;
 	//绘制最大的宽度
-	private int MAX_WIDHT=getWidth()-MARGIN_RIGHT;
+	private int MAX_WIDHT=getWidth()/2;
 	//绘制最大的高度
 	private int MAX_HEIGHT=getHeight()-MARKER_LINE;
 	private boolean isRunning=true;
@@ -231,7 +231,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		this.samplerRate=samplerRate;
 		this.bitWidth=bitWidth;
 //		LogUtils.v("width="+width+" getWidth()="+getWidth()+" height="+height+" getHeight()="+getHeight());
-		MAX_WIDHT=getWidth()-MARGIN_RIGHT;
+		MAX_WIDHT=getWidth()/2;
 		MAX_HEIGHT=getHeight()-MARKER_LINE;
 //        LogUtils.v("1 divider="+divider);
 		drawSamplerCountPreScreen = (float) (samplerRate/Constant.INDEX_TIMES*SECOND_PRESCREEN);
@@ -246,7 +246,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		this.rightChannel=rightChannel;
 		this.samplerRate=samplerRate;
 		this.bitWidth=bitWidth;
-		MAX_WIDHT=getWidth()-MARGIN_RIGHT;
+		MAX_WIDHT=getWidth()/2;
 		MAX_HEIGHT=getHeight()-MARKER_LINE;
 		LogUtils.v(TAG+"tempCount="+needSamplerCount+" drawSamplerCountPreScreen="+drawSamplerCountPreScreen+" "+needSamplerCount/drawSamplerCountPreScreen);
 		if (needSamplerCount>drawSamplerCountPreScreen){
@@ -405,7 +405,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 
 	private void initView() {
 		circlePaint = new Paint();
-		circlePaint.setColor(getResources().getColor(R.color.waveformCircle));
+		circlePaint.setColor(getResources().getColor(R.color.waveformLightCircle));
 		circlePaint.setAntiAlias(true);
 
 		waveformPaint = new Paint();
@@ -636,7 +636,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 			return;
 		}
 		//canvas.drawColor(Color.rgb(241, 241, 241));// 清除背景
-		canvas.drawColor(getResources().getColor(R.color.waveformBacg));
+		canvas.drawColor(getResources().getColor(R.color.waveformDarkBag));
 
 		Paint borderLine =new Paint();
 		borderLine.setColor(getResources().getColor(R.color.waveformBorderLine));

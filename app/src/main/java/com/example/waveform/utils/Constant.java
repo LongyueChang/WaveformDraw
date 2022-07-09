@@ -9,7 +9,8 @@ public class Constant {
     public static final String SINGLE_FILE="singleFile.pcm";
     public static final String DOUBLE_FILE="doubleFile.pcm";
 
-    public static final int SINGLE_CHANNEL_SAMPLEER_RATE=44100;
+//    public static final int SINGLE_CHANNEL_SAMPLEER_RATE=44100;
+    public static final int SINGLE_CHANNEL_SAMPLEER_RATE=48000;
     public static final int SINGLE_CAHNNEL_FORMAT=AudioFormat.ENCODING_PCM_16BIT;
     public static final int SINGLE_CHANNLE_BIT_WIDTH=SINGLE_CAHNNEL_FORMAT==AudioFormat.ENCODING_PCM_16BIT?16:8;
     public static final int SINGLE_CHANNEL_CONFIG=AudioFormat.CHANNEL_IN_MONO;

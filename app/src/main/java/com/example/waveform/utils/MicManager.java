@@ -21,7 +21,7 @@ public class MicManager {
 //	private static MicManager instance = null;
 	private AudioRecord mAudioRecorder = null;
 	private AudioTrack mAudioTrack = null;
-	private int sampleRateInHz = 16000;
+	private int sampleRateInHz = 48000;
 	private int channelConfig_in = AudioFormat.CHANNEL_IN_MONO;
 	private int channelConfig_out = AudioFormat.CHANNEL_OUT_MONO;
 	private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
@@ -65,7 +65,7 @@ public class MicManager {
 	}
 
 	private void sendMessage(byte[] data,int size){
-		Message message=new Message();
+		Message message = handler.obtainMessage();
 		message.obj=data;
 		message.arg1=size;
 		message.what=status;
