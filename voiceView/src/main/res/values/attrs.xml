@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NewVoiceView">
+        <attr name="bgColor" format="color|reference"/>
+        <attr name="startColor" format="color|reference"/>
+        <attr name="centerColor" format="color|reference"/>
+        <attr name="endColor" format="color|reference"/>
+    </declare-styleable>
+</resources>

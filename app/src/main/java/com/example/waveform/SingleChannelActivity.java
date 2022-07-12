@@ -1,7 +1,6 @@
 package com.example.waveform;
 
 import android.content.DialogInterface;
-import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,11 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import com.example.waveform.utils.BaseAudioSurfaceView;
-import com.example.waveform.utils.Constant;
-import com.example.waveform.utils.MicManager;
+
+import com.yunxi.voiceview.BaseAudioSurfaceView;
+import com.yunxi.voiceview.Constant;
+import com.yunxi.voiceview.MicManager;
 import com.example.waveform.utils.NormalDialog;
 import com.example.waveform.utils.TitleView;
+import com.yunxi.voiceview.VoiceDbView;
+
+import java.util.Random;
 
 public class SingleChannelActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +27,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
     private TitleView title_view;
     private NormalDialog rePlayDialog;
     private Button btn_singleChannel;
+    private VoiceDbView voiceDbView;
 
     private Handler handler=new Handler(){
         @Override
@@ -31,6 +35,8 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
             super.handleMessage(msg);
             switch (msg.what){
                 case MicManager.MODE_RECORD_FILE:
+                    Random random = new Random();
+                    voiceDbView.setVoice(random.nextInt(100));
                     bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
                     break;
             }
@@ -55,6 +61,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         title_view.setBackOnClickListener(this);
         bsv_singleChannel=(BaseAudioSurfaceView)findViewById(R.id.bsv_singleChannel);
         iv_singleChannel=(ImageView) findViewById(R.id.iv_singleChannel);
+        voiceDbView = findViewById(R.id.voiceDb_view);
         iv_singleChannel.setOnClickListener(this);
     }
 

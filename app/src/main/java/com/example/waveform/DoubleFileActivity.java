@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.example.waveform.utils.BaseAudioSurfaceView;
-import com.example.waveform.utils.Constant;
-import com.example.waveform.utils.FileUtils;
 import com.example.waveform.utils.NormalDialog;
+import com.yunxi.voiceview.BaseAudioSurfaceView;
+import com.yunxi.voiceview.Constant;
+import com.yunxi.voiceview.FileUtils;
 import com.example.waveform.utils.TitleView;
 
 import java.io.File;

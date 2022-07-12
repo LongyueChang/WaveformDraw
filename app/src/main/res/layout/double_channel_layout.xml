@@ -9,14 +9,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/title_view"
         />
-    <com.example.waveform.utils.BaseAudioSurfaceView
+    <com.yunxi.voiceview.BaseAudioSurfaceView
         app:layout_constraintTop_toBottomOf="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/bsv_doubleChannel"
         />
 
-    <com.example.waveform.utils.BaseAudioSurfaceView
+    <com.yunxi.voiceview.BaseAudioSurfaceView
         app:layout_constraintTop_toBottomOf="@+id/bsv_doubleChannel"
         android:layout_width="match_parent"
         android:layout_height="100dp"

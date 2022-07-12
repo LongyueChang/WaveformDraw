@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -9,7 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/title_view"
         />
-    <com.example.waveform.utils.BaseAudioSurfaceView
+    <com.yunxi.voiceview.BaseAudioSurfaceView
         app:layout_constraintTop_toBottomOf="@+id/title_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -27,12 +28,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <com.yunxi.voiceview.VoiceDbView
+        android:id="@+id/voiceDb_view"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_singleChannel"
+        tools:ignore="MissingConstraints" />
+
     <ImageView
         android:clickable="true"
         android:layout_marginTop="5dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bsv_singleChannel"
+        app:layout_constraintTop_toBottomOf="@+id/voiceDb_view"
         android:id="@+id/iv_singleChannel"
         android:src="@drawable/start_play"
         android:layout_width="wrap_content"

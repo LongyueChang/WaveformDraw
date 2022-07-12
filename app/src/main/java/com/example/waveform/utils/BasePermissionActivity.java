@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.waveform.R;
+import com.yunxi.voiceview.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

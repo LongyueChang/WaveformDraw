@@ -1,4 +1,4 @@
-package com.example.waveform.utils;
+package com.yunxi.voiceview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.waveform.R;
+
 
 import java.util.Date;
 import java.util.Iterator;
