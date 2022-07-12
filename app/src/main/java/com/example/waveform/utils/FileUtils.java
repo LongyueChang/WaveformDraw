@@ -1,8 +1,12 @@
-package com.yunxi.voiceview;
+package com.example.waveform.utils;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import com.yunxi.voiceview.Constant;
+import com.yunxi.voiceview.LogUtils;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -180,7 +184,7 @@ public class FileUtils {
                 if (instream != null) {
                     bis = new BufferedInputStream(instream);
                     byte[] buffer = new byte[640];
-                    needSamplerCount= (bis.available())/(bitWidth/8)/Constant.INDEX_TIMES;
+                    needSamplerCount= (bis.available())/(bitWidth/8)/ Constant.INDEX_TIMES;
                     allData=new int[needSamplerCount];
                     while(running){
                         int size=bis.read(buffer);

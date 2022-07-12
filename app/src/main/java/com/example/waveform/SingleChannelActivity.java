@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.yunxi.voiceview.BaseAudioSurfaceView;
 import com.yunxi.voiceview.Constant;
-import com.yunxi.voiceview.MicManager;
+import com.example.waveform.utils.MicManager;
 import com.example.waveform.utils.NormalDialog;
 import com.example.waveform.utils.TitleView;
 import com.yunxi.voiceview.VoiceDbView;

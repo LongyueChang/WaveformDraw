@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.example.waveform.utils.NormalDialog;
 import com.yunxi.voiceview.BaseAudioSurfaceView;
 import com.yunxi.voiceview.Constant;
-import com.yunxi.voiceview.FileUtils;
+import com.example.waveform.utils.FileUtils;
 import com.example.waveform.utils.TitleView;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.yunxi.voiceview;
+package com.example.waveform.utils;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -8,6 +8,9 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+
+import com.yunxi.voiceview.LogUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

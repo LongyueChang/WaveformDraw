@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import com.example.waveform.utils.NormalDialog;
 import com.yunxi.voiceview.BaseAudioSurfaceView;
 import com.yunxi.voiceview.Constant;
-import com.yunxi.voiceview.MicManager;
+import com.example.waveform.utils.MicManager;
 import com.example.waveform.utils.TitleView;
 
 public class DoubleChannelActivity extends AppCompatActivity implements View.OnClickListener {
