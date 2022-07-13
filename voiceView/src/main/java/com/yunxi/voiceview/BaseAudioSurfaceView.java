@@ -68,161 +68,6 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	private boolean  rightChannel=false;
 	private boolean isFullScreen=false;
 
-
-	private class DrawHasReadAudioData implements  Runnable{
-
-		private boolean isRunning=true;
-
-       private Object lock=new Object();
-		private void stopDraw(){
-			isRunning=false;
-		}
-
-		private int hasReadAudioDataSize=0;
-		private float hasReadAudioDataWidth=0;
-		private int tempCount=0;
-		private boolean tempFlag=true;
-		public void setHasReadAudioDataSize(int size) {
-			synchronized (lock){
-				//LogUtils.v("setHasReadAudioDataSize getId()="+Thread.currentThread().getId());
-				tempCount+=size;
-//				LogUtils.v("tempCount="+tempCount+" size="+inBuf.size());
-				if (tempCount>inBuf.size()){
-					tempCount=inBuf.size();
-				}
-				lock.notify();
-			}
-		}
-
-		public void reDraws(){
-			synchronized (lock){
-				hasReadAudioDataWidth=0;
-				hasReadAudioDataSize=0;
-				tempCount=0;
-				LogUtils.v("reDraws");
-				setWaveformPaintColor(R.color.waveformBorderLine);
-				startDrawsThread();
-				tempFlag=true;
-			}
-
-		}
-
-		@Override
-		public  void run() {
-			while(isRunning){
-				synchronized (lock){
-					if (!holder.getSurface().isValid() || BaseAudioSurfaceView.this.isRunning){
-						continue;
-					}
-					if (tempCount!=0){
-						if (!isFullScreen){
-							if(tempFlag){
-								LogUtils.v(TAG+"draw backGround");
-								for (int i=0;i<3;i++){
-									tempFlag=false;
-									BaseAudioSurfaceView.this.isRunning=true;
-									drawWaveForm(inBuf);
-									BaseAudioSurfaceView.this.isRunning=false;
-								}
-							}
-						}
-					}else{
-						continue;
-					}
-					setWaveformPaintColor(R.color.waveformCenterLine);
-//		int tempSize =tempCount/(bitWidth/8)/INDEX_TIMES;
-//		Canvas canvas= holder.lockCanvas(null);
-
-					Canvas canvas = holder.lockCanvas(
-							new Rect((int)hasReadAudioDataWidth,0 , (int) ((tempCount-1) * divider)+1, getHeight()));// 关键:获取画布
-//					initBaseView(canvas);
-					///LogUtils.v("hasReadAudioDataWidth="+(int)hasReadAudioDataWidth+" "+hasReadAudioDataWidth+" tempCount * divider="+(int) ((tempCount-1) * divider)+" "+(tempCount-1) * divider+" tempCount="+tempCount);
-//		canvas.drawColor(Color.TRANSPARENT,PorterDuff.Mode.CLEAR);// 清除画布
-					if(canvas==null){
-						LogUtils.v(TAG+"setHasReadAudioDataSize canvas is null");
-						return;
-					}
-					hasReadAudioDataWidth =(tempCount) * divider;
-					int tempHasReadAudioDataWidth= (int) hasReadAudioDataWidth;
-//		LogUtils.v("left="+holder.getSurfaceFrame().left+" right"+holder.getSurfaceFrame().right);
-					int upMinHeight=MARKER_LINE/2;
-					int underMaxHeight=getHeight()-upMinHeight;
-					int i =hasReadAudioDataSize;
-//					LogUtils.v("i="+i);
-					for ( ; i < tempCount ; i++) {
-						float y=inBuf.get(i)/yAxisTimes + getHeight()/2;// 调节缩小比例，调节基准线
-
-						float x=(i) * divider;
-						if (x>=tempHasReadAudioDataWidth){
-							hasReadAudioDataSize=i;
-							if (isFullScreen){
-								break;
-							}
-						}else{
-							hasReadAudioDataSize=tempCount;
-						}
-
-						if(x >= MAX_WIDHT){
-							x = MAX_WIDHT;
-						}
-						if(y<=upMinHeight){
-							y = upMinHeight;
-						}
-						if(y>underMaxHeight){
-							y = underMaxHeight;
-						}
-						float y1 = getHeight() - y;
-
-						if(y1<=upMinHeight){
-							y1 = upMinHeight;
-						}
-						if(y1>underMaxHeight){
-							y1 = underMaxHeight;
-						}
-//						LogUtils.v("====i="+i+" x="+x+" y="+y+" y1="+y1);
-						canvas.drawLine(x, y,  x,y1, waveformPaint);//中间出波形
-//			canvas.drawLine(x, 20,  x,380, waveformPaint);
-					}
-
-//		LogUtils.v("hasReadAudioDataWidth "+hasReadAudioDataWidth);
-					holder.unlockCanvasAndPost(canvas);// 解锁画布，提交画好的图像
-                   /* if (i==inBuf.size()){
-                    	LogUtils.v("+++++++++++++++"+i);
-                        setWaveformPaintColor(R.color.waveformBorderLine);
-
-                        BaseAudioSurfaceView.this.reDraws();
-                    }*/
-					try {
-                        lock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-				}
-			}
-
-		}
-	}
-
-	private Thread hasReadAudioDataThread;
-	private DrawHasReadAudioData mDrawHasReadAudioData;
-	public void startHasReadAudioDataThread(int size){
-		if (hasReadAudioDataThread==null){
-			mDrawHasReadAudioData=new DrawHasReadAudioData();
-			mDrawHasReadAudioData.setHasReadAudioDataSize(size);
-			hasReadAudioDataThread=new Thread(mDrawHasReadAudioData);
-			hasReadAudioDataThread.start();
-		}
-		if (mDrawHasReadAudioData!=null){
-			mDrawHasReadAudioData.setHasReadAudioDataSize(size);
-		}
-	}
-
-	public void reDraws(){
-		if (mDrawHasReadAudioData!=null){
-			mDrawHasReadAudioData.reDraws();
-		}
-	}
-
 	/**
 	 *在开始绘制之前，需要调用这个函数设置音频参数，用来初始化绘制的一些参数。
 	 * */
@@ -241,34 +86,9 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		startDrawThread();
 	}
 
-	//	private float
-	private void setAudioParams(int samplerRate,int bitWidth,boolean  rightChannel,int needSamplerCount){
-		this.rightChannel=rightChannel;
-		this.samplerRate=samplerRate;
-		this.bitWidth=bitWidth;
-		MAX_WIDHT=getWidth()/2;
-		MAX_HEIGHT=getHeight()-MARKER_LINE;
-		LogUtils.v(TAG+"tempCount="+needSamplerCount+" drawSamplerCountPreScreen="+drawSamplerCountPreScreen+" "+needSamplerCount/drawSamplerCountPreScreen);
-		if (needSamplerCount>drawSamplerCountPreScreen){
-			if ( (needSamplerCount/drawSamplerCountPreScreen) > 1.5){
-				isFullScreen=true;
-			}
-			drawSamplerCountPreScreen=needSamplerCount;
-
-		}
-		divider = (float) (MAX_WIDHT/drawSamplerCountPreScreen);
-		yAxisTimes = getYAxisTimesByBitWidth(bitWidth);
-
-	}
 
 	public void setmShowText(String mShowText) {
 		this.mShowText = mShowText;
-	}
-
-	public void addAudioDatas(int[] tempDatas,int fileLength, int samplerRate,int bitWidth, boolean  rightChannel){
-		setAudioParams(samplerRate,bitWidth ,rightChannel,fileLength );
-		setWaveformPaintColor(R.color.waveformBorderLine);
-		getTargetAudioBufs(tempDatas);
 	}
 
 	public void addAudioData(byte[] data,int size,int samplerRate,int bitWidth,boolean  rightChannel){
@@ -340,32 +160,6 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 			j+=byteCountPreSampler;
 		}
 		return tempSamplerData;
-	}
-
-	private void getTargetAudioBufs(int[] tempBuf){
-//		LogUtils.v("getTargetAudioBuf");
-		synchronized (inBuf) {
-			for (int i = 0; i < tempBuf.length; i ++) {
-				if (isRunning){
-					if (rightChannel){
-						if( (i+1) <tempBuf.length ){
-							inBuf.add(tempBuf[i+1]);
-						}
-					}else{
-//						LogUtils.v("tempBuf[i]="+tempBuf[i]);
-						inBuf.add(tempBuf[i]);
-					}
-				}else{
-					if (!inBuf.isEmpty()){
-						inBuf.clear();
-					}
-					break;
-				}
-			}
-		}
-		startDrawsThread();
-		tempBuf=null;
-		LogUtils.v("inBuf.size="+inBuf.size());
 	}
 
 

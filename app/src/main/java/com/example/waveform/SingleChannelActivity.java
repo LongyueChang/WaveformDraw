@@ -36,7 +36,8 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
             switch (msg.what){
                 case MicManager.MODE_RECORD_FILE:
                     Random random = new Random();
-                    voiceDbView.setVoice(random.nextInt(100));
+                    int voiceCount = random.nextInt(100);
+                    voiceDbView.setVoice(voiceCount);
                     bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
                     break;
             }

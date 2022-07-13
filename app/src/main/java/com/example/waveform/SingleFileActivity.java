@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import com.example.waveform.utils.NormalDialog;
-import com.yunxi.voiceview.BaseAudioSurfaceView;
+import com.yunxi.voiceview.AudioFileSurfaceView;
 import com.yunxi.voiceview.Constant;
 import com.example.waveform.utils.FileUtils;
 import com.example.waveform.utils.TitleView;
@@ -20,7 +20,7 @@ import java.io.File;
 
 public class SingleFileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private BaseAudioSurfaceView bsv_singleFile;
+    private AudioFileSurfaceView bsv_singleFile;
     private ImageView iv_singleFile;
     private File file;
     private Button btn_singleFile;
@@ -75,7 +75,7 @@ public class SingleFileActivity extends AppCompatActivity implements View.OnClic
         title_view.setBackOnClickListener(this);
         title_view.setTitleText("单声道文件波形绘制");
         btn_singleFile.setOnClickListener(this);
-        bsv_singleFile=(BaseAudioSurfaceView)findViewById(R.id.bsv_singleFile);
+        bsv_singleFile=(AudioFileSurfaceView)findViewById(R.id.bsv_singleFile);
         iv_singleFile=(ImageView) findViewById(R.id.iv_singleFile);
         iv_singleFile.setOnClickListener(this);
     }

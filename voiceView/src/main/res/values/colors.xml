@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-
 
     <color name="waveformBacg">#efefef</color>
     <color name="waveformDarkBag">#2B2B2B</color>
     <color name="waveformCircle">#f6837e</color>
     <color name="waveformLightCircle">#FAE5E4</color>
     <color name="waveformBorderLine">#a9a9a9</color>
-    <color name="waveformCenterLine">#27c7af</color>
+    <color name="waveformCenterLine">#1374F6</color>
 </resources>

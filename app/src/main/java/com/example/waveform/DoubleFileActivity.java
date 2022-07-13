@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.waveform.utils.NormalDialog;
-import com.yunxi.voiceview.BaseAudioSurfaceView;
+import com.yunxi.voiceview.AudioFileSurfaceView;
 import com.yunxi.voiceview.Constant;
 import com.example.waveform.utils.FileUtils;
 import com.example.waveform.utils.TitleView;
@@ -21,7 +21,7 @@ import java.io.File;
 
 public class DoubleFileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private BaseAudioSurfaceView bsv_doubleFile,bsv_doubleFile2;
+    private AudioFileSurfaceView bsv_doubleFile,bsv_doubleFile2;
     private ImageView iv_doubleFile;
     private File file;
     private Button btn_doubleFile;
@@ -78,8 +78,8 @@ public class DoubleFileActivity extends AppCompatActivity implements View.OnClic
         title_view.setBackOnClickListener(this);
         title_view.setTitleText("双声道文件波形绘制");
         btn_doubleFile.setOnClickListener(this);
-        bsv_doubleFile=(BaseAudioSurfaceView)findViewById(R.id.bsv_doubleFile);
-        bsv_doubleFile2=(BaseAudioSurfaceView)findViewById(R.id.bsv_doubleFile2);
+        bsv_doubleFile=(AudioFileSurfaceView)findViewById(R.id.bsv_doubleFile);
+        bsv_doubleFile2=(AudioFileSurfaceView)findViewById(R.id.bsv_doubleFile2);
         iv_doubleFile=(ImageView) findViewById(R.id.iv_doubleFile);
         iv_doubleFile.setOnClickListener(this);
     }
