@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    &lt;!&ndash;背景色&ndash;&gt;-->
+<!--    <attr name="zjun_bgColor" format="reference|color" />-->
+<!--    &lt;!&ndash;刻度颜色&ndash;&gt;-->
+<!--    <attr name="zjun_gradationColor" format="reference|color" />-->
+
+<!--    &lt;!&ndash;中间指针线颜色&ndash;&gt;-->
+<!--    <attr name="zjun_indicatorLineColor" format="reference|color" />-->
+<!--    &lt;!&ndash;中间指针线宽度&ndash;&gt;-->
+<!--    <attr name="zjun_indicatorLineWidth" format="reference|dimension" />-->
+
+<!--    &lt;!&ndash;时间尺控件&ndash;&gt;-->
+<!--    <declare-styleable name="TimeRuleView">-->
+<!--        <attr name="zjun_bgColor" />-->
+<!--        &lt;!&ndash;刻度颜色&ndash;&gt;-->
+<!--        <attr name="zjun_gradationColor" />-->
+<!--        &lt;!&ndash;时间块的高度&ndash;&gt;-->
+<!--        <attr name="trv_partHeight" format="dimension|reference" />-->
+<!--        &lt;!&ndash;时间块的颜色&ndash;&gt;-->
+<!--        <attr name="trv_partColor" format="color|reference" />-->
+<!--        &lt;!&ndash;刻度宽度&ndash;&gt;-->
+<!--        <attr name="trv_gradationWidth" format="dimension|reference" />-->
+<!--        &lt;!&ndash;秒刻度的长度&ndash;&gt;-->
+<!--        <attr name="trv_secondLen" format="dimension|reference" />-->
+<!--        &lt;!&ndash;分刻度的长度&ndash;&gt;-->
+<!--        <attr name="trv_minuteLen" format="dimension|reference" />-->
+<!--        &lt;!&ndash;时刻度的长度&ndash;&gt;-->
+<!--        <attr name="trv_hourLen" format="dimension|reference" />-->
+<!--        &lt;!&ndash;刻度数值颜色&ndash;&gt;-->
+<!--        <attr name="trv_gradationTextColor" format="color|reference" />-->
+<!--        &lt;!&ndash;刻度数值大小&ndash;&gt;-->
+<!--        <attr name="trv_gradationTextSize" format="dimension|reference" />-->
+<!--        &lt;!&ndash;刻度数值与时刻度的距离&ndash;&gt;-->
+<!--        <attr name="trv_gradationTextGap" format="dimension|reference" />-->
+<!--        &lt;!&ndash;当前时间，单位：s&ndash;&gt;-->
+<!--        <attr name="trv_currentTime" format="integer|reference" />-->
+<!--        &lt;!&ndash;中间指针线颜色&ndash;&gt;-->
+<!--        <attr name="zjun_indicatorLineColor" />-->
+<!--        &lt;!&ndash;中间指针线宽度&ndash;&gt;-->
+<!--        <attr name="zjun_indicatorLineWidth" />-->
+<!--        &lt;!&ndash;中间指针上三角形的边长&ndash;&gt;-->
+<!--        <attr name="trv_indicatorTriangleSideLen" format="dimension|reference" />-->
+
+<!--    </declare-styleable>-->
+</resources>

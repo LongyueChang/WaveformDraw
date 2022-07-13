@@ -425,6 +425,8 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		holder.unlockCanvasAndPost(canvas);
 	}
 
+
+
 	private void initBaseView(Canvas canvas){
 		if (canvas==null){
 			return;
@@ -435,7 +437,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		Paint borderLine =new Paint();
 		borderLine.setColor(getResources().getColor(R.color.waveformBorderLine));
 		//最上面的那根线
-		canvas.drawLine(0, MARKER_LINE/2, getWidth(), MARKER_LINE/2, borderLine);
+//		canvas.drawLine(0, MARKER_LINE/2, getWidth(), MARKER_LINE/2, borderLine);
 		//最下面的那根线
 		canvas.drawLine(0, getHeight()-MARKER_LINE/2-1,getWidth(), getHeight()-MARKER_LINE/2-1, borderLine);
 //		if (channelCount==2){
@@ -460,6 +462,13 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		canvas.drawText(mShowText, (int)((getWidth()-MARGIN_RIGHT+MARGIN_RIGHT/2)-textWidth/2), progressHeight , textPaint);
 	}
 
+	private void initTimeLine(Canvas canvas){
+		Paint borderLine =new Paint();
+		borderLine.setColor(getResources().getColor(R.color.waveformBorderLine));
+
+		//最上面的那根线
+		canvas.drawLine(0, MARKER_LINE/2, getWidth(), MARKER_LINE/2, borderLine);
+	}
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		LogUtils.v(TAG+"surfaceDestroyed");

@@ -26,6 +26,6 @@ android {
 }
 
 dependencies {
-
-implementation files('libs/audioWraper.jar')
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation files('libs/audioWraper.jar')
 }

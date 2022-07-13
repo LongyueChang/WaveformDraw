@@ -6,10 +6,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.yunxi.voiceview.TimeRuleView;
 import com.yunxi.voiceview.BaseAudioSurfaceView;
 import com.yunxi.voiceview.Constant;
 import com.example.waveform.utils.MicManager;
@@ -18,9 +20,12 @@ import com.example.waveform.utils.TitleView;
 import com.yunxi.voiceview.VoiceDbView;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SingleChannelActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private final String TAG = SingleChannelActivity.class.getSimpleName();
     private BaseAudioSurfaceView bsv_singleChannel;
     private ImageView iv_singleChannel;
     private MicManager manager=null;
@@ -28,6 +33,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
     private NormalDialog rePlayDialog;
     private Button btn_singleChannel;
     private VoiceDbView voiceDbView;
+    private TimeRuleView timeRuleView;
 
     private Handler handler=new Handler(){
         @Override
@@ -52,6 +58,43 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         manager=new MicManager(Constant.SINGLE_FILE);
         manager.setHandler(handler);
         manager.setAudioParameters(Constant.SINGLE_CHANNEL_SAMPLEER_RATE,Constant.SINGLE_CAHNNEL_FORMAT ,Constant.SINGLE_CHANNEL_CONFIG );
+
+        initData();
+    }
+
+    private int currentTime = 0;
+    private void initData() {
+//        List<TimeRuleView.TimePart> timeParts = new ArrayList<>();
+//        TimeRuleView.TimePart timePart = new TimeRuleView.TimePart();
+//        timePart.startTime = 0;
+//        timePart.endTime = 10;
+//        timeParts.add(timePart);
+//
+//
+//        TimeRuleView.TimePart timePart2 = new TimeRuleView.TimePart();
+//        timePart2.startTime = 20;
+//        timePart2.endTime = 100;
+//        timeParts.add(timePart2);
+//        timeRuleView.setTimePartList(timeParts);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d(TAG,"update Time ");
+                currentTime=currentTime+10;
+                timeRuleView.setCurrentTime(currentTime);
+
+            }
+        },500,1000);
+
+        timeRuleView.computeScroll();
+        timeRuleView.setOnTimeChangedListener(new TimeRuleView.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(int newTimeValue) {
+                Log.d(TAG,"onTimeChanged:"+newTimeValue);
+            }
+        });
+
     }
 
     private void initView(){
@@ -63,6 +106,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         bsv_singleChannel=(BaseAudioSurfaceView)findViewById(R.id.bsv_singleChannel);
         iv_singleChannel=(ImageView) findViewById(R.id.iv_singleChannel);
         voiceDbView = findViewById(R.id.voiceDb_view);
+        timeRuleView = findViewById(R.id.time_rule_view);
         iv_singleChannel.setOnClickListener(this);
     }
 
