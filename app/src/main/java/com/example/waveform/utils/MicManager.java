@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+
 import com.yunxi.audio.YunxiAudioWrapper;
 import com.yunxi.voiceview.LogUtils;
 
@@ -49,26 +50,16 @@ public class MicManager {
 
 	public MicManager(String filename) {
 		file = new File(Environment.getExternalStorageDirectory(), filename);
-
-
-//		YunxiAudioWrapper.setRecordingVolumeCallback(audioCallback);
-
-//		YunxiAudioWrapper.setRecordingVolumeCallback(new YunxiAudioWrapper.AudioRecordingVolumeCallback(){
-//			@Override
-//			public void onRecordingVolumeChanged(int event, float volume, boolean isClipping){
-//				Log.d(TAG, "onRecordingVolumeChanged: event:"+
-//						event+"volume: " +volume + "isClipping:" +isClipping);
-//			}
-//		});
+		YunxiAudioWrapper.setRecordingVolumeCallback(audioCallback);
 	}
 
-//	private YunxiAudioWrapper.AudioRecordingVolumeCallback audioCallback = new YunxiAudioWrapper.AudioRecordingVolumeCallback(){
-//
-//		@Override
-//		public void onRecordingVolumeChanged(int event, float volume, boolean isClipping) {
-//			Log.d(TAG,"onRecordingVolumeChanged event:"+event+";volume:"+volume+";isClipping:"+isClipping);
-//		}
-//	};
+	private YunxiAudioWrapper.AudioRecordingVolumeCallback audioCallback = new YunxiAudioWrapper.AudioRecordingVolumeCallback(){
+
+		@Override
+		public void onRecordingVolumeChanged(int event, float volume, boolean isClipping) {
+			Log.d(TAG,"onRecordingVolumeChanged event:"+event+";volume:"+volume+";isClipping:"+isClipping);
+		}
+	};
 
 	private void initRecord() {
 		recordMinBufSize = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig_in, audioFormat);

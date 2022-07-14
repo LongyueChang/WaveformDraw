@@ -10,20 +10,20 @@
 
 
     <!--背景色-->
-    <attr name="zjun_bgColor" format="reference|color" />
+    <attr name="yunxi_bgColor" format="reference|color" />
     <!--刻度颜色-->
-    <attr name="zjun_gradationColor" format="reference|color" />
+    <attr name="yunxi_gradationColor" format="reference|color" />
 
     <!--中间指针线颜色-->
-    <attr name="zjun_indicatorLineColor" format="reference|color" />
+    <attr name="yunxi_indicatorLineColor" format="reference|color" />
     <!--中间指针线宽度-->
-    <attr name="zjun_indicatorLineWidth" format="reference|dimension" />
+    <attr name="yunxi_indicatorLineWidth" format="reference|dimension" />
 
     <!--时间尺控件-->
     <declare-styleable name="TimeRuleView">
-        <attr name="zjun_bgColor" />
+        <attr name="yunxi_bgColor" />
         <!--刻度颜色-->
-        <attr name="zjun_gradationColor" />
+        <attr name="yunxi_gradationColor" />
         <!--时间块的高度-->
         <attr name="trv_partHeight" format="dimension|reference" />
         <!--时间块的颜色-->
@@ -45,9 +45,9 @@
         <!--当前时间，单位：s-->
         <attr name="trv_currentTime" format="integer|reference" />
         <!--中间指针线颜色-->
-        <attr name="zjun_indicatorLineColor" />
+        <attr name="yunxi_indicatorLineColor" />
         <!--中间指针线宽度-->
-        <attr name="zjun_indicatorLineWidth" />
+        <attr name="yunxi_indicatorLineWidth" />
         <!--中间指针上三角形的边长-->
         <attr name="trv_indicatorTriangleSideLen" format="dimension|reference" />
 

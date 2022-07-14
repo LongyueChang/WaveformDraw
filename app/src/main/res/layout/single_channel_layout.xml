@@ -8,10 +8,17 @@
     <com.example.waveform.utils.TitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title_view"
+        android:id="@+id/title_view" />
+
+
+    <com.yunxi.voiceview.TimeView
+        android:id="@+id/time_rule_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/title_view"
         />
     <com.yunxi.voiceview.BaseAudioSurfaceView
-        app:layout_constraintTop_toBottomOf="@+id/title_view"
+        app:layout_constraintTop_toBottomOf="@+id/time_rule_view"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:id="@+id/bsv_singleChannel"
@@ -46,11 +53,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.yunxi.voiceview.TimeRuleView
-        android:id="@+id/time_rule_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/iv_singleChannel"
-        />
 
 </android.support.constraint.ConstraintLayout>

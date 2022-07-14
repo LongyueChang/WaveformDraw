@@ -11,7 +11,7 @@ public class LogUtils {
 
 	}
 	private static final String TAG = "KW_LOG";
-	private static boolean debug = false;
+	private static boolean debug = true;
 
 	public static void setDebugMode(boolean flag) 
 	{
@@ -92,9 +92,7 @@ public class LogUtils {
 
 	public static void v(String text)
 	{
-		{
-			Log.d(TAG, text);
-		}
+		Log.d(TAG, text);
 	}
 
 	public static void v(String tag, String text)

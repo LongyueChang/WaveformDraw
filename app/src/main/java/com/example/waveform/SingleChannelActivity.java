@@ -17,6 +17,7 @@ import com.yunxi.voiceview.Constant;
 import com.example.waveform.utils.MicManager;
 import com.example.waveform.utils.NormalDialog;
 import com.example.waveform.utils.TitleView;
+import com.yunxi.voiceview.TimeView;
 import com.yunxi.voiceview.VoiceDbView;
 
 import java.util.Random;
@@ -33,7 +34,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
     private NormalDialog rePlayDialog;
     private Button btn_singleChannel;
     private VoiceDbView voiceDbView;
-    private TimeRuleView timeRuleView;
+    private TimeView timeRuleView;
 
     private Handler handler=new Handler(){
         @Override
@@ -44,6 +45,10 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
                     Random random = new Random();
                     int voiceCount = random.nextInt(100);
                     voiceDbView.setVoice(voiceCount);
+
+                    currentTime=currentTime+2;
+                    timeRuleView.setCurrentTime(currentTime);
+
                     bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
                     break;
             }
@@ -77,18 +82,19 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
 //        timeParts.add(timePart2);
 //        timeRuleView.setTimePartList(timeParts);
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG,"update Time ");
-                currentTime=currentTime+10;
-                timeRuleView.setCurrentTime(currentTime);
-
-            }
-        },500,1000);
+//        new Timer().schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Log.d(TAG,"update Time ");
+////                currentTime=currentTime+60;
+//                currentTime=currentTime+1;
+//                timeRuleView.setCurrentTime(currentTime);
+//
+//            }
+//        },500,16);
 
         timeRuleView.computeScroll();
-        timeRuleView.setOnTimeChangedListener(new TimeRuleView.OnTimeChangedListener() {
+        timeRuleView.setOnTimeChangedListener(new TimeView.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(int newTimeValue) {
                 Log.d(TAG,"onTimeChanged:"+newTimeValue);
