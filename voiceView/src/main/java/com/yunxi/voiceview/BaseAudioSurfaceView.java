@@ -33,6 +33,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	private final int DRAW_TIME = 5;//1000 / 200;
 	//距离右边的距离,根据自己喜好，也可以为0.
 	private final int MARGIN_RIGHT=0;
+	private final int MARGIN_TEXT_RIGHT=30;
 
 	private SurfaceHolder holder;
 	//上下圆的画笔
@@ -44,7 +45,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	//上下基线使用的高度
 	private final int MARKER_LINE=40;
 	//标识圆的半径
-	private final int RADIOUS=MARKER_LINE/4;
+	private final int RADIOUS=MARKER_LINE/8;
 	//基线与标识圆的x值
 //	private int markerX=0;
 	//绘制最大的宽度
@@ -80,7 +81,8 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		this.bitWidth=bitWidth;
 		MAX_WIDHT=getWidth()/2;
 		MAX_HEIGHT=getHeight()-MARKER_LINE;
-		drawSamplerCountPreScreen = (float) (samplerRate/Constant.INDEX_TIMES*SECOND_PRESCREEN);
+		drawSamplerCountPreScreen = (float) (this.samplerRate/Constant.INDEX_TIMES*SECOND_PRESCREEN);
+		LogUtils.d(TAG,"drawSamplerCountPreScreen:"+drawSamplerCountPreScreen);
 		divider = (float) (MAX_WIDHT/drawSamplerCountPreScreen);
 		LogUtils.d(TAG,"divider:"+divider);
 		yAxisTimes = getYAxisTimesByBitWidth(bitWidth);
@@ -95,7 +97,6 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	public void addAudioData(byte[] data,int size,int samplerRate,int bitWidth,boolean  rightChannel){
 		setAudioParam(samplerRate,bitWidth ,rightChannel );
 		getTargetAudioBuf(byteArray2SamplerArray(data,size));
-//		getTargetAudioBuf(AudioUtils.byteArray2SamplerArray(data,size ,bitWidth ));
 	}
 
 	private final int BIT_8_WIDTH = 8;
@@ -170,12 +171,16 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 						inBuf.add(tempBuf[i]);
 					}
 				}else{
-					if (!inBuf.isEmpty()){
-						inBuf.clear();
-					}
+					clearInBuf();
 					break;
 				}
 			}
+		}
+	}
+
+	private void clearInBuf(){
+		if (!inBuf.isEmpty()){
+			inBuf.clear();
 		}
 	}
 
@@ -246,9 +251,8 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 			return;
 		}
 		initBaseView(canvas);
-//		float baseLineX =(float) (9600* divider);
-		LogUtils.d(TAG,"buf.size:"+buf.size());
-		float baseLineX =(float) MAX_WIDHT;
+
+		float baseLineX =(float) buf.size()*divider;
 
 		//如果超过预留的右边距距离
 		if(getWidth() - baseLineX <= MARGIN_RIGHT){
@@ -272,7 +276,6 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 					y=getHeight()/2;
 				}else{
 					y =bufData/yAxisTimes + getHeight()/2;
-//					y =bufData/yAxisTimes;
 				}
 
 				float x=(i) * divider;
@@ -302,20 +305,16 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 			}else{
 				break;
 			}
-
 		}
-//		previousX=0;
-//		previousY=0;
-		holder.unlockCanvasAndPost(canvas);// 解锁画布，提交画好的图像
+		//解锁画布，提交画好的图像
+		holder.unlockCanvasAndPost(canvas);
 	}
 
 
 	public void reDrawThread(){
 		if (drawThread!=null){
 			isRunning=false;
-			if (!inBuf.isEmpty()){
-				inBuf.clear();
-			}
+			clearInBuf();
 			drawThread=null;
 			Canvas canvas = holder.lockCanvas();// 关键:获取画布
 			initBaseView(canvas);
@@ -326,9 +325,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	public void stopDrawThread(){
 		if (drawThread!=null || isRunning==true){
 			isRunning=false;
-			if (!inBuf.isEmpty()){
-				inBuf.clear();
-			}
+			clearInBuf();
 			drawThread=null;
 		}
 	}
@@ -351,9 +348,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	public void stopDrawsThread(){
 		if (drawsThread!=null || isRunning==true){
 			isRunning=false;
-			if (!inBuf.isEmpty()){
-				inBuf.clear();
-			}
+			clearInBuf();
 			drawsThread=null;
 			LogUtils.v(TAG+"stopDrawsThread");
 		}
@@ -388,7 +383,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		if (canvas==null){
 			return;
 		}
-		//canvas.drawColor(Color.rgb(241, 241, 241));// 清除背景
+
 		canvas.drawColor(getResources().getColor(R.color.waveformDarkBag));
 
 		Paint borderLine =new Paint();
@@ -397,11 +392,6 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 //		canvas.drawLine(0, MARKER_LINE/2, getWidth(), MARKER_LINE/2, borderLine);
 		//最下面的那根线
 		canvas.drawLine(0, getHeight()-MARKER_LINE/2-1,getWidth(), getHeight()-MARKER_LINE/2-1, borderLine);
-//		if (channelCount==2){
-//			 canvas.drawLine(0, MARKER_LINE/2+MAX_HEIGHT/2, getWidth(),MARKER_LINE/2+MAX_HEIGHT/2, borderLine);//第二根线
-//			 canvas.drawLine(0,  getHeight()/2+MAX_HEIGHT/2, getWidth(), getHeight()/2+MAX_HEIGHT/2, borderLine);//第3根线
-//		}
-
 
 		Paint centerLine =new Paint();
 		centerLine.setColor(getResources().getColor(R.color.waveformCenterLine ));
@@ -409,16 +399,17 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		canvas.drawLine(0, getHeight()/2, getWidth() ,getHeight()/2, centerLine);
 
 
-		LogUtils.d(TAG,"default MAX_WIDHT:"+MAX_WIDHT+";get width:"+getWidth());
-		canvas.drawCircle(MAX_WIDHT, RADIOUS, RADIOUS, circlePaint);// 上面小圆
-		canvas.drawCircle(MAX_WIDHT, getHeight()-RADIOUS, RADIOUS, circlePaint);// 下面小圆
-		canvas.drawLine(MAX_WIDHT, RADIOUS*2, MAX_WIDHT, getHeight()-RADIOUS*2, circlePaint);//垂直的线
+
+//		canvas.drawCircle(MAX_WIDHT, RADIOUS, RADIOUS, circlePaint);// 上面小圆
+//		canvas.drawCircle(MAX_WIDHT, getHeight()-RADIOUS, RADIOUS, circlePaint);// 下面小圆
+//		canvas.drawLine(MAX_WIDHT, RADIOUS*2, MAX_WIDHT, getHeight()-RADIOUS*2, circlePaint);//垂直的线
+
 
 		float textWidth = textPaint.measureText(mShowText);
 		Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
 
 		float progressHeight=getHeight()/2 + (fontMetrics.bottom - fontMetrics.top)/2 - fontMetrics.bottom;
-		canvas.drawText(mShowText, (int)((getWidth()-MARGIN_RIGHT+MARGIN_RIGHT/2)-textWidth/2), progressHeight , textPaint);
+		canvas.drawText(mShowText, (int)((getWidth()-MARGIN_TEXT_RIGHT+MARGIN_TEXT_RIGHT/2)-textWidth/2), progressHeight , textPaint);
 	}
 
 	@Override

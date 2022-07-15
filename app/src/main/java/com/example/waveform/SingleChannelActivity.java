@@ -77,10 +77,11 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
 //                    audioWaveView.upRecData(audioData);
 //                    Log.d(TAG,"audioData size:"+audioData);
 
-                    currentTime=currentTime+1;
+                    currentTime=currentTime+2;
                     timeRuleView.setCurrentTime(currentTime);
 
-                    bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
+//                    bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
+                    bsv_singleChannel.addAudioData((byte[])msg.obj,16000, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
                     break;
             }
         }

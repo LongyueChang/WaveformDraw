@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 
 import com.yunxi.voiceview.R;
 import com.yunxi.voiceview.WaveSurfaceView;
+import com.yunxi.voiceview.thread.JobExecutor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ import java.util.Date;
  */
 public class WaveCanvas {
 
+    private final JobExecutor viewThread;
     private ArrayList<Short> inBuf = new ArrayList<Short>();//缓冲区数据
     private ArrayList<byte[]> write_data = new ArrayList<byte[]>();//写入文件数据
     public boolean isRecording = false;// 录音线程控制标记
@@ -40,7 +42,7 @@ public class WaveCanvas {
     public int baseLine = 0;// Y轴基线
     private AudioRecord audioRecord;
     int recBufSize;
-    private int marginRight=30;//波形图绘制距离右边的距离
+    private int marginRight=0;//波形图绘制距离右边的距离
     private int marginLeft=20;//波形图绘制距离左边的距离
     private int draw_time = 1000 / 200;//两次绘图间隔的时间
     private float divider = 0.2f;//为了节约绘画时间，每0.2个像素画一个数据
@@ -56,6 +58,10 @@ public class WaveCanvas {
     private Paint paintText;
     private Paint paintRect;
 
+
+    public WaveCanvas(){
+        viewThread = new JobExecutor(1);
+    }
 
     /**
      * 开始录音
@@ -73,7 +79,8 @@ public class WaveCanvas {
         savePcmPath = path + audioName +".pcm";
         saveWavPath = path + audioName +".wav";
         init();
-        new Thread(new WriteRunnable()).start();//开线程写文件
+        viewThread.execute(new WriteRunnable());
+//        new Thread(new WriteRunnable()).start();//开线程写文件
         new RecordTask(audioRecord, recBufSize, sfv, mwavePaint,callback).execute();
     }
 
@@ -238,17 +245,18 @@ public class WaveCanvas {
                 buf.set(i, (short)((0x0000 | bus[1]) << 8 | bus[0]));//高低位交换
             }
             Canvas canvas = sfv.getHolder().lockCanvas(
-                    new Rect(0, 0, sfv.getWidth(), sfv.getHeight()));// 关键:获取画布
+                    new Rect(0, 0, sfv.getWidth()/2, sfv.getHeight()));// 关键:获取画布
             if(canvas==null)
                 return;
 //            canvas.drawARGB(255, 239, 239, 239);
             canvas.drawColor(Color.parseColor(WaveAttrs.Color.BACKGROUND_COLOR));
+//            int start =(int) ((buf.size())* divider);
             int start =(int) ((buf.size())* divider);
             float py = baseLine;
             float y;
 
             if(sfv.getWidth() - start <= marginRight){//如果超过预留的右边距距离
-                start = sfv.getWidth() -marginRight;//画的位置x坐标
+                start = sfv.getWidth()/2 -marginRight;//画的位置x坐标
             }
             canvas.drawLine(0, line_off/2, sfv.getWidth(), line_off/2, paintLine);//最上面的那根线
             canvas.drawLine(0, sfv.getHeight()-line_off/2-1, sfv.getWidth(), sfv.getHeight()-line_off/2-1, paintLine);//最下面的那根线
@@ -258,8 +266,7 @@ public class WaveCanvas {
             int height = sfv.getHeight()-line_off;
             canvas.drawLine(0, height*0.5f+line_off/2, sfv.getWidth() ,height*0.5f+line_off/2, center);//中心线
 
-//	         canvas.drawLine(0, height*0.25f+20, sfv.getWidth(),height*0.25f+20, paintLine);//第二根线
-//	         canvas.drawLine(0, height*0.75f+20, sfv.getWidth(),height*0.75f+20, paintLine);//第3根线
+
             for (int i = 0; i < buf.size(); i++) {
                 y =buf.get(i)/rateY + baseLine;// 调节缩小比例，调节基准线
                 float x=(i) * divider;

@@ -171,6 +171,7 @@ public class TimeView extends View {
     private int mWidth, mHeight;
     private int mHalfWidth;
 
+
     private int mInitialX;
     private int mLastX, mLastY;
     private boolean isMoving;
@@ -229,7 +230,7 @@ public class TimeView extends View {
 
     private void calculateValues() {
         mCurrentDistance = Float.parseFloat(currentTime+"")/Float.parseFloat(mUnitSecond+"") * mUnitGap;
-        logD("distance:"+mCurrentDistance);
+//        logD("distance:"+mCurrentDistance);
     }
 
     private void init(Context context) {
@@ -345,7 +346,8 @@ public class TimeView extends View {
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
             mHeight = dp2px(60);
         }
-        mHalfWidth = mWidth >> 1;
+//        mHalfWidth = mWidth >> 1;
+        mHalfWidth = 0;
 
         setMeasuredDimension(mWidth, mHeight);
     }
@@ -445,7 +447,7 @@ public class TimeView extends View {
 
 
         // 当前时间指针
-        drawTimeIndicator(canvas);
+//        drawTimeIndicator(canvas);
     }
 
     @Override
@@ -482,6 +484,7 @@ public class TimeView extends View {
             if (start % 3600 == 0) {
                 // 时刻度
 //                canvas.drawLine(offset, hourLen+10, offset, hourLen+ gradationTextGap + gradationTextSize + 10, mPaint);
+//                canvas.drawLine(offset, hourLen+10, offset, mHeight, mPaint);
                 canvas.drawLine(offset, hourLen+10, offset, mHeight, mPaint);
             } else if (start % 60 == 0) {
                 // 分刻度

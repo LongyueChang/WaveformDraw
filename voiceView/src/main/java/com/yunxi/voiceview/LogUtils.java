@@ -11,7 +11,7 @@ public class LogUtils {
 
 	}
 	private static final String TAG = "KW_LOG";
-	private static boolean debug = false;
+	private static boolean debug = true;
 
 	public static void setDebugMode(boolean flag) 
 	{
