@@ -1,16 +1,27 @@
 package com.example.waveform;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.yunxi.voiceview.AudioWaveView;
 import com.yunxi.voiceview.TimeRuleView;
 import com.yunxi.voiceview.BaseAudioSurfaceView;
 import com.yunxi.voiceview.Constant;
@@ -19,10 +30,17 @@ import com.example.waveform.utils.NormalDialog;
 import com.example.waveform.utils.TitleView;
 import com.yunxi.voiceview.TimeView;
 import com.yunxi.voiceview.VoiceDbView;
+import com.yunxi.voiceview.WaveSurfaceView;
+import com.yunxi.voiceview.draw.WaveCanvas;
 
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 public class SingleChannelActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,6 +54,8 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
     private VoiceDbView voiceDbView;
     private TimeView timeRuleView;
 
+    private ArrayList<Short> audioData;
+
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -46,7 +66,18 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
                     int voiceCount = random.nextInt(100);
                     voiceDbView.setVoice(voiceCount);
 
-                    currentTime=currentTime+2;
+
+//                    byte[] audioByte = (byte[]) msg.obj;
+//                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+//                    short audioShort = bytesToShort(audioByte);
+//                    if (audioData.size() > maxSize) {
+//                        audioData.remove(0);
+//                    }
+//                    audioData.add(audioShort);
+//                    audioWaveView.upRecData(audioData);
+//                    Log.d(TAG,"audioData size:"+audioData);
+
+                    currentTime=currentTime+1;
                     timeRuleView.setCurrentTime(currentTime);
 
                     bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
@@ -54,6 +85,8 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
             }
         }
     };
+    private int maxSize;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +102,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
 
     private int currentTime = 0;
     private void initData() {
+
 //        List<TimeRuleView.TimePart> timeParts = new ArrayList<>();
 //        TimeRuleView.TimePart timePart = new TimeRuleView.TimePart();
 //        timePart.startTime = 0;
@@ -114,7 +148,12 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         voiceDbView = findViewById(R.id.voiceDb_view);
         timeRuleView = findViewById(R.id.time_rule_view);
         iv_singleChannel.setOnClickListener(this);
+
+
+
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -132,6 +171,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
                                 break;
                             case DialogInterface.BUTTON_POSITIVE:
                                 manager.destroy();
+
                                 bsv_singleChannel.reDrawThread();
                                 btn_singleChannel.setVisibility(View.GONE);
                                 iv_singleChannel.setImageDrawable(getResources().getDrawable(R.drawable.stop_play));
@@ -143,11 +183,13 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.iv_back:
                 manager.destroy();
+
                 bsv_singleChannel.stopDrawThread();
                 this.finish();
                 break;
             case R.id.iv_singleChannel:
                 if (manager.getOperationStatus()==MicManager.MODE_RECORD_FILE){
+
                     manager.stopRecord();
                     btn_singleChannel.setVisibility(View.VISIBLE);
                     iv_singleChannel.setImageDrawable(getResources().getDrawable(R.drawable.start_play));
@@ -159,6 +201,12 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
                 break;
         }
     }
+
+
+
+
+
+
 
     @Override
     protected void onDestroy() {

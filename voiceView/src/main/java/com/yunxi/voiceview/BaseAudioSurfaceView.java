@@ -195,9 +195,9 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 
 		waveformPaint = new Paint();
 		waveformPaint.setColor(getResources().getColor(R.color.waveformCenterLine));// 画笔为color
-		waveformPaint.setStrokeWidth(1/2);// 设置画笔粗细
+		waveformPaint.setStrokeWidth(1/3);// 设置画笔粗细
 		waveformPaint.setAntiAlias(true);
-		waveformPaint.setFilterBitmap(true);
+		waveformPaint.setFilterBitmap(false);
 		waveformPaint.setStyle(Paint.Style.FILL);
 
 		textPaint = new Paint();
@@ -246,18 +246,21 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 			return;
 		}
 		initBaseView(canvas);
-		float baseLineX =(float) (9600* divider);
+//		float baseLineX =(float) (9600* divider);
 		LogUtils.d(TAG,"buf.size:"+buf.size());
-//		float baseLineX =(float) MAX_WIDHT;
+		float baseLineX =(float) MAX_WIDHT;
 
 		//如果超过预留的右边距距离
 		if(getWidth() - baseLineX <= MARGIN_RIGHT){
 			baseLineX = MAX_WIDHT;//画的位置x坐标
 		}
 		//变化的view
-		canvas.drawCircle(baseLineX, RADIOUS, RADIOUS, circlePaint);// 上面小圆
-		canvas.drawCircle(baseLineX, getHeight()-RADIOUS, RADIOUS, circlePaint);// 下面小圆
-		canvas.drawLine(baseLineX, RADIOUS*2, baseLineX, getHeight()-RADIOUS*2, circlePaint);//垂直的线
+		// 上面小圆
+		canvas.drawCircle(baseLineX, RADIOUS, RADIOUS, circlePaint);
+		// 下面小圆
+		canvas.drawCircle(baseLineX, getHeight()-RADIOUS, RADIOUS, circlePaint);
+		//垂直的线
+		canvas.drawLine(baseLineX, RADIOUS*2, baseLineX, getHeight()-RADIOUS*2, circlePaint);
 		int upMinHeight=MARKER_LINE/2;
 		int underMaxHeight=getHeight()-upMinHeight;
 		for (int i = 0; i <buf.size() ; i++) {
@@ -265,7 +268,8 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 				int bufData=buf.get(i);
 				float y=0;
 				if(bufData==0){
-					y=getHeight()/2;// 调节缩小比例，调节基准线
+					// 调节缩小比例，调节基准线
+					y=getHeight()/2;
 				}else{
 					y =bufData/yAxisTimes + getHeight()/2;
 //					y =bufData/yAxisTimes;
@@ -417,13 +421,6 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		canvas.drawText(mShowText, (int)((getWidth()-MARGIN_RIGHT+MARGIN_RIGHT/2)-textWidth/2), progressHeight , textPaint);
 	}
 
-	private void initTimeLine(Canvas canvas){
-		Paint borderLine =new Paint();
-		borderLine.setColor(getResources().getColor(R.color.waveformBorderLine));
-
-		//最上面的那根线
-		canvas.drawLine(0, MARKER_LINE/2, getWidth(), MARKER_LINE/2, borderLine);
-	}
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		LogUtils.v(TAG+"surfaceDestroyed");

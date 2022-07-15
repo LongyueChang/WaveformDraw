@@ -157,7 +157,9 @@ public class MicManager {
 			}
 		}
 		try {
-			fout.write(data, 0, size);
+			if (fout != null) {
+				fout.write(data, 0, size);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

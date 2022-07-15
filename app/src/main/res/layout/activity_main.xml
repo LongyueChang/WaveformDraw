@@ -38,4 +38,12 @@
         android:layout_height="wrap_content"
         />
 
+    <Button
+        app:layout_constraintTop_toBottomOf="@+id/btn_doubleFile"
+        android:id="@+id/single_audio_view"
+        android:text="单轨道音频绘制"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
 </android.support.constraint.ConstraintLayout>

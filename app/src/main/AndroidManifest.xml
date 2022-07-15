@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SingleAudioActivity"/>
         <activity android:name=".SingleChannelActivity"/>
         <activity android:name=".SingleFileActivity"/>
         <activity android:name=".DoubleChannelActivity"/>
