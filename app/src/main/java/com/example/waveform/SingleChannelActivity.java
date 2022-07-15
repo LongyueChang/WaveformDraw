@@ -21,7 +21,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.yunxi.audio.YunxiAudioWrapper;
 import com.yunxi.voiceview.AudioWaveView;
+import com.yunxi.voiceview.DbView;
 import com.yunxi.voiceview.TimeRuleView;
 import com.yunxi.voiceview.BaseAudioSurfaceView;
 import com.yunxi.voiceview.Constant;
@@ -52,38 +54,45 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
     private NormalDialog rePlayDialog;
     private Button btn_singleChannel;
     private VoiceDbView voiceDbView;
+    private DbView dbView;
     private TimeView timeRuleView;
 
-    private ArrayList<Short> audioData;
 
-    private Handler handler=new Handler(){
+    private Handler handler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
                 case MicManager.MODE_RECORD_FILE:
-                    Random random = new Random();
-                    int voiceCount = random.nextInt(100);
-                    voiceDbView.setVoice(voiceCount);
-
-
-//                    byte[] audioByte = (byte[]) msg.obj;
-//                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-//                    short audioShort = bytesToShort(audioByte);
-//                    if (audioData.size() > maxSize) {
-//                        audioData.remove(0);
-//                    }
-//                    audioData.add(audioShort);
-//                    audioWaveView.upRecData(audioData);
-//                    Log.d(TAG,"audioData size:"+audioData);
-
                     currentTime=currentTime+2;
                     timeRuleView.setCurrentTime(currentTime);
 
 //                    bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
                     bsv_singleChannel.addAudioData((byte[])msg.obj,16000, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
+
+
+                    float recordVolume = YunxiAudioWrapper.getRecordVolume();
+                    double showVolume = 100 +recordVolume*2;
+                    if(showVolume<0){
+                        showVolume=0;
+                    }
+                    Log.d(TAG,"showVolume:"+showVolume);
+                    voiceDbView.setVoice((int) showVolume);
                     break;
+//                case MicManager.MODE_VOLUME:
+////                    Random random = new Random();
+////                    int voiceCount = random.nextInt(100);
+//                    float volume = (float) msg.obj;
+//                    double showVolume = 60 +volume;
+//                    if(showVolume<0){
+//                        showVolume=0;
+//                    }
+//                    Log.d(TAG,"showVolume:"+showVolume);
+//                    voiceDbView.setVoice((int) showVolume);
+//                    break;
+                default:break;
             }
+
         }
     };
     private int maxSize;
@@ -147,6 +156,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         bsv_singleChannel=(BaseAudioSurfaceView)findViewById(R.id.bsv_singleChannel);
         iv_singleChannel=(ImageView) findViewById(R.id.iv_singleChannel);
         voiceDbView = findViewById(R.id.voiceDb_view);
+        dbView = findViewById(R.id.voiceDb_text);
         timeRuleView = findViewById(R.id.time_rule_view);
         iv_singleChannel.setOnClickListener(this);
 

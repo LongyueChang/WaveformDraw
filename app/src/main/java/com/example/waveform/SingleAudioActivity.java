@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -91,15 +92,22 @@ public class SingleAudioActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_audio_singleChannel:
-                if(!isPlay){
-                    isPlay=true;
-                    iv_singleChannel.setImageDrawable(getResources().getDrawable(R.drawable.stop_play));
-                    startAudio();
-                } else {
-                    isPlay=false;
-                    iv_singleChannel.setImageDrawable(getResources().getDrawable(R.drawable.start_play));
-                    stopAudio();
+                double[] ddd={-1,-2,-3,-4,-20,-35,-100,-200,-230};
+                for (int i = 0; i < ddd.length; i++) {
+//                    double abs = Math.abs(ddd[i]);
+                    double v = 30 +ddd[i] ;
+                    Log.d(TAG,"ddd:"+ddd[i]+" == "+v);
                 }
+
+//                if(!isPlay){
+//                    isPlay=true;
+//                    iv_singleChannel.setImageDrawable(getResources().getDrawable(R.drawable.stop_play));
+//                    startAudio();
+//                } else {
+//                    isPlay=false;
+//                    iv_singleChannel.setImageDrawable(getResources().getDrawable(R.drawable.start_play));
+//                    stopAudio();
+//                }
                 break;
             default:break;
         }

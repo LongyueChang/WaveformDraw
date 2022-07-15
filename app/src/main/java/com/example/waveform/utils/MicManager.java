@@ -42,6 +42,7 @@ public class MicManager {
 	private int status = -1;
 	public static final int MODE_OUT_MIC = 1;
 	public static final int MODE_RECORD_FILE = 2;
+	public static final int MODE_VOLUME = MODE_RECORD_FILE+1;
 	public static final int MODE_DEFAULT = 0;
 	public static final int MODE_PLAY_FILE = 3;
 	private FileOutputStream fout;
@@ -50,7 +51,7 @@ public class MicManager {
 
 	public MicManager(String filename) {
 		file = new File(Environment.getExternalStorageDirectory(), filename);
-		YunxiAudioWrapper.setRecordingVolumeCallback(audioCallback);
+//		YunxiAudioWrapper.setRecordingVolumeCallback(audioCallback);
 	}
 
 	private YunxiAudioWrapper.AudioRecordingVolumeCallback audioCallback = new YunxiAudioWrapper.AudioRecordingVolumeCallback(){
@@ -58,6 +59,7 @@ public class MicManager {
 		@Override
 		public void onRecordingVolumeChanged(int event, float volume, boolean isClipping) {
 			Log.d(TAG,"onRecordingVolumeChanged event:"+event+";volume:"+volume+";isClipping:"+isClipping);
+			sendMessage(MODE_VOLUME,volume);
 		}
 	};
 
@@ -84,6 +86,13 @@ public class MicManager {
 		message.obj=data;
 		message.arg1=size;
 		message.what=status;
+		handler.sendMessage(message);
+	}
+
+	private void sendMessage(int code,float volume){
+		Message message = handler.obtainMessage();
+		message.obj=volume;
+		message.what=code;
 		handler.sendMessage(message);
 	}
 

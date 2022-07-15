@@ -2,9 +2,12 @@ package com.yunxi.voiceview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -38,6 +41,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 	private SurfaceHolder holder;
 	//上下圆的画笔
 	private Paint circlePaint;
+	private Paint centerLinePaint;
 	//波形线的画笔
 	private Paint waveformPaint;
 	private Paint textPaint;
@@ -198,6 +202,12 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		circlePaint.setColor(getResources().getColor(R.color.waveformLightCircle));
 		circlePaint.setAntiAlias(true);
 
+		centerLinePaint = new Paint();
+		centerLinePaint.setColor(getResources().getColor(R.color.waveformLightCircle));
+		circlePaint.setAntiAlias(true);
+//		centerLinePaint.setShader(linearGradient);
+
+
 		waveformPaint = new Paint();
 		waveformPaint.setColor(getResources().getColor(R.color.waveformCenterLine));// 画笔为color
 		waveformPaint.setStrokeWidth(1/3);// 设置画笔粗细
@@ -264,7 +274,7 @@ public class BaseAudioSurfaceView extends SurfaceView implements SurfaceHolder.C
 		// 下面小圆
 		canvas.drawCircle(baseLineX, getHeight()-RADIOUS, RADIOUS, circlePaint);
 		//垂直的线
-		canvas.drawLine(baseLineX, RADIOUS*2, baseLineX, getHeight()-RADIOUS*2, circlePaint);
+		canvas.drawLine(baseLineX, RADIOUS*2, baseLineX, getHeight()-RADIOUS*2, centerLinePaint);
 		int upMinHeight=MARKER_LINE/2;
 		int underMaxHeight=getHeight()-upMinHeight;
 		for (int i = 0; i <buf.size() ; i++) {
