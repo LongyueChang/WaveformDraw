@@ -11,14 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.waveform.utils.NormalDialog;
-import com.yunxi.voiceview.BaseAudioSurfaceView;
+import com.yunxi.voiceview.AudioSurfaceView;
 import com.yunxi.voiceview.Constant;
 import com.example.waveform.utils.MicManager;
 import com.example.waveform.utils.TitleView;
 
 public class DoubleChannelActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private BaseAudioSurfaceView bsv_doubleChannel,bsv_doubleChannel2;
+    private AudioSurfaceView bsv_doubleChannel,bsv_doubleChannel2;
     private ImageView iv_doubleChannel;
     private MicManager manager=null;
     private TitleView title_view;
@@ -54,8 +54,8 @@ public class DoubleChannelActivity extends AppCompatActivity implements View.OnC
         title_view=(TitleView) findViewById(R.id.title_view);
         title_view.setTitleText("双声道波形绘制");
         title_view.setBackOnClickListener(this);
-        bsv_doubleChannel=(BaseAudioSurfaceView)findViewById(R.id.bsv_doubleChannel);
-        bsv_doubleChannel2=(BaseAudioSurfaceView)findViewById(R.id.bsv_doubleChannel2);
+        bsv_doubleChannel=(AudioSurfaceView)findViewById(R.id.bsv_doubleChannel);
+        bsv_doubleChannel2=(AudioSurfaceView)findViewById(R.id.bsv_doubleChannel2);
         iv_doubleChannel=(ImageView) findViewById(R.id.iv_doubleChannel);
         iv_doubleChannel.setOnClickListener(this);
     }

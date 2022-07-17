@@ -1,60 +1,37 @@
 package com.example.waveform;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.yunxi.audio.YunxiAudioWrapper;
-import com.yunxi.voiceview.AudioWaveView;
-import com.yunxi.voiceview.DbView;
-import com.yunxi.voiceview.TimeRuleView;
-import com.yunxi.voiceview.BaseAudioSurfaceView;
+import com.yunxi.voiceview.VoiceDbText;
+import com.yunxi.voiceview.AudioSurfaceView;
 import com.yunxi.voiceview.Constant;
 import com.example.waveform.utils.MicManager;
 import com.example.waveform.utils.NormalDialog;
 import com.example.waveform.utils.TitleView;
 import com.yunxi.voiceview.TimeView;
 import com.yunxi.voiceview.VoiceDbView;
-import com.yunxi.voiceview.WaveSurfaceView;
-import com.yunxi.voiceview.draw.WaveCanvas;
-
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 
 public class SingleChannelActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = SingleChannelActivity.class.getSimpleName();
-    private BaseAudioSurfaceView bsv_singleChannel;
+    private AudioSurfaceView bsv_singleChannel;
     private ImageView iv_singleChannel;
     private MicManager manager=null;
     private TitleView title_view;
     private NormalDialog rePlayDialog;
     private Button btn_singleChannel;
     private VoiceDbView voiceDbView;
-    private DbView dbView;
+    private VoiceDbText dbView;
     private TimeView timeRuleView;
 
 
@@ -73,12 +50,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
 
                     // TODO: 2022/7/17
 //                    float recordVolume = YunxiAudioWrapper.getRecordVolume();
-//                    double showVolume = 100 +recordVolume*2;
-//                    if(showVolume<0){
-//                        showVolume=0;
-//                    }
-//                    Log.d(TAG,"showVolume:"+showVolume);
-//                    voiceDbView.setVoice((int) showVolume);
+                    voiceDbView.setVoice(-32);
                     break;
 //                case MicManager.MODE_VOLUME:
 ////                    Random random = new Random();
@@ -138,13 +110,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
 //            }
 //        },500,16);
 
-        timeRuleView.computeScroll();
-        timeRuleView.setOnTimeChangedListener(new TimeView.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(int newTimeValue) {
-                Log.d(TAG,"onTimeChanged:"+newTimeValue);
-            }
-        });
+//        timeRuleView.computeScroll();
 
     }
 
@@ -154,7 +120,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         title_view=(TitleView) findViewById(R.id.title_view);
         title_view.setTitleText("单声道波形绘制");
         title_view.setBackOnClickListener(this);
-        bsv_singleChannel=(BaseAudioSurfaceView)findViewById(R.id.bsv_singleChannel);
+        bsv_singleChannel=(AudioSurfaceView)findViewById(R.id.bsv_singleChannel);
         iv_singleChannel=(ImageView) findViewById(R.id.iv_singleChannel);
         voiceDbView = findViewById(R.id.voiceDb_view);
         dbView = findViewById(R.id.voiceDb_text);

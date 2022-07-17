@@ -27,8 +27,13 @@ public class VoiceDbView extends View {
     private float[] positions;
     private LinearGradient linearGradient;
 
-    private int progress = 0;
+    private double progress = 0;
     private float progressPercent = 0f;
+
+    /**
+     * 绘制参数按照60db平均划分，100的音量平均一份占1.6667 大小
+     */
+    private final float dbDivision = 1.6667f;
 
     public VoiceDbView(Context context) {
         this(context, null);
@@ -56,9 +61,15 @@ public class VoiceDbView extends View {
         paint.setStyle(Paint.Style.FILL);
     }
 
-    public void setVoice(int voiceCount) {
-        progress = voiceCount;
-        progressPercent = progress * 1.0f / 100;
+
+    public void setVoice(float voiceCount) {
+        //按照绘图比例计算分贝值占比显示
+        double realShowVolume = 100 + (voiceCount*dbDivision);
+        if(realShowVolume<0){
+            realShowVolume=0;
+        }
+        progress = realShowVolume;
+        progressPercent = (float) (progress * 1.0f / 100);
         invalidate();
     }
 

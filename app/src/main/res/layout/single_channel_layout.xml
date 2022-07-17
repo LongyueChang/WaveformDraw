@@ -17,12 +17,21 @@
         android:layout_height="32dp"
         app:layout_constraintTop_toBottomOf="@+id/title_view"
         />
-    <com.yunxi.voiceview.BaseAudioSurfaceView
+    <com.yunxi.voiceview.AudioSurfaceView
         app:layout_constraintTop_toBottomOf="@+id/time_rule_view"
-        android:layout_width="match_parent"
+        android:layout_width="370dp"
         android:layout_height="500dp"
         android:id="@+id/bsv_singleChannel"
         />
+
+    <com.yunxi.voiceview.AudioDbText
+        app:layout_constraintTop_toBottomOf="@+id/time_rule_view"
+        app:layout_constraintLeft_toRightOf="@+id/bsv_singleChannel"
+        android:layout_width="32dp"
+        android:layout_height="500dp"
+        android:id="@+id/voice_db"
+        />
+
 
     <Button
         android:visibility="gone"
@@ -42,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_singleChannel"
         tools:ignore="MissingConstraints" />
 
-    <com.yunxi.voiceview.DbView
+    <com.yunxi.voiceview.VoiceDbText
         android:id="@+id/voiceDb_text"
         android:layout_width="match_parent"
         android:layout_height="32dp"
