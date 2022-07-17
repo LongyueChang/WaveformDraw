@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Scroller;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
 
@@ -69,8 +70,8 @@ public class TimeView extends View {
     /**
      * 当前时间，单位：s
      */
-    private @IntRange(from = 0, to = MAX_TIME_VALUE)
-    int currentTime;
+    private @FloatRange(from = 0, to = MAX_TIME_VALUE)
+    float currentTime;
     /**
      * 指针颜色
      */
@@ -199,7 +200,7 @@ public class TimeView extends View {
         init(context);
         initScaleGestureDetector(context);
 
-        mTextHalfWidth = mTextPaint.measureText("00:00") * .5f;
+        mTextHalfWidth = mTextPaint.measureText("00:00:00") * .5f;
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         SCROLL_SLOP = viewConfiguration.getScaledTouchSlop();
         MIN_VELOCITY = viewConfiguration.getScaledMinimumFlingVelocity();
@@ -212,14 +213,14 @@ public class TimeView extends View {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TimeRuleView);
         bgColor = ta.getColor(R.styleable.TimeRuleView_yunxi_bgColor, Color.parseColor("#1F1F1F"));
         gradationColor = ta.getColor(R.styleable.TimeRuleView_yunxi_gradationColor, Color.parseColor("#888888"));
-        partHeight = ta.getDimension(R.styleable.TimeRuleView_trv_partHeight, dp2px(20));
+        partHeight = ta.getDimension(R.styleable.TimeRuleView_trv_partHeight, dp2px(8));
         partColor = ta.getColor(R.styleable.TimeRuleView_trv_partColor, Color.parseColor("#F58D24"));
         gradationWidth = ta.getDimension(R.styleable.TimeRuleView_trv_gradationWidth, 1);
-        secondLen = ta.getDimension(R.styleable.TimeRuleView_trv_secondLen, dp2px(3));
+        secondLen = ta.getDimension(R.styleable.TimeRuleView_trv_secondLen, dp2px(12));
         minuteLen = ta.getDimension(R.styleable.TimeRuleView_trv_minuteLen, dp2px(10));
-        hourLen = ta.getDimension(R.styleable.TimeRuleView_trv_hourLen, dp2px(10));
-        gradationTextColor = ta.getColor(R.styleable.TimeRuleView_trv_gradationTextColor, Color.GRAY);
-        gradationTextSize = ta.getDimension(R.styleable.TimeRuleView_trv_gradationTextSize, sp2px(12));
+        hourLen = ta.getDimension(R.styleable.TimeRuleView_trv_hourLen, dp2px(12));
+        gradationTextColor = ta.getColor(R.styleable.TimeRuleView_trv_gradationTextColor, Color.parseColor("#FFFFFF"));
+        gradationTextSize = ta.getDimension(R.styleable.TimeRuleView_trv_gradationTextSize, sp2px(8));
         gradationTextGap = ta.getDimension(R.styleable.TimeRuleView_trv_gradationTextGap, dp2px(2));
         currentTime = ta.getInt(R.styleable.TimeRuleView_trv_currentTime, 0);
         indicatorTriangleSideLen = ta.getDimension(R.styleable.TimeRuleView_trv_indicatorTriangleSideLen, dp2px(15));
@@ -352,89 +353,89 @@ public class TimeView extends View {
         setMeasuredDimension(mWidth, mHeight);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        final int actionIndex = event.getActionIndex();
-        int pointerId = event.getPointerId(actionIndex);
-        final int actionMasked = event.getActionMasked();
-        final int action = event.getAction();
-        final int pointerCount = event.getPointerCount();
-        logD("onTouchEvent: isScaling=%b, actionIndex=%d, pointerId=%d, actionMasked=%d, action=%d, pointerCount=%d",
-                isScaling, actionIndex, pointerId, actionMasked, action, pointerCount);
-        final int x = (int) event.getX();
-        final int y = (int) event.getY();
-        mScaleGestureDetector.onTouchEvent(event);
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        final int actionIndex = event.getActionIndex();
+//        int pointerId = event.getPointerId(actionIndex);
+//        final int actionMasked = event.getActionMasked();
+//        final int action = event.getAction();
+//        final int pointerCount = event.getPointerCount();
+//        logD("onTouchEvent: isScaling=%b, actionIndex=%d, pointerId=%d, actionMasked=%d, action=%d, pointerCount=%d",
+//                isScaling, actionIndex, pointerId, actionMasked, action, pointerCount);
+//        final int x = (int) event.getX();
+//        final int y = (int) event.getY();
+//        mScaleGestureDetector.onTouchEvent(event);
+//
+//        if (mVelocityTracker == null) {
+//            mVelocityTracker = VelocityTracker.obtain();
+//        }
+//        mVelocityTracker.addMovement(event);
+//        switch (actionMasked) {
+//            case MotionEvent.ACTION_DOWN:
+//                isMoving = false;
+//                mInitialX = x;
+//                if (!mScroller.isFinished()) {
+//                    mScroller.forceFinished(true);
+//                }
+//                break;
+//            case MotionEvent.ACTION_POINTER_DOWN:
+//                // 只要第二手指按下，就禁止滑动
+//                isScaling = true;
+//                isMoving = false;
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (isScaling) {
+//                    break;
+//                }
+//                int dx = x - mLastX;
+//                if (!isMoving) {
+//                    final int dy = y - mLastY;
+//                    if (Math.abs(x - mInitialX) <= SCROLL_SLOP || Math.abs(dx) <= Math.abs(dy)) {
+//                        break;
+//                    }
+//                    isMoving = true;
+//                }
+//                mCurrentDistance -= dx;
+//                computeTime();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                if (isScaling || !isMoving) {
+//                    break;
+//                }
+//                mVelocityTracker.computeCurrentVelocity(1000, MAX_VELOCITY);
+//                final int xVelocity = (int) mVelocityTracker.getXVelocity();
+//                if (Math.abs(xVelocity) >= MIN_VELOCITY) {
+//                    // 惯性滑动
+//                    final int maxDistance = (int) (MAX_TIME_VALUE / mUnitGap * mUnitGap);
+//                    mScroller.fling((int) mCurrentDistance, 0, -xVelocity, 0, 0, maxDistance, 0, 0);
+//                    invalidate();
+//                }
+//                break;
+//            case MotionEvent.ACTION_POINTER_UP:
+//                // 两个中的有一个手指被抬起，允许滑动。同时把未抬起的手机当前位置赋给初始X
+//                isScaling = false;
+//                int restIndex = actionIndex == 0 ? 1 : 0;
+//                mInitialX = (int) event.getX(restIndex);
+//                break;
+//            default:
+//                break;
+//        }
+//        mLastX = x;
+//        mLastY = y;
+//        return true;
+//    }
 
-        if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
-        }
-        mVelocityTracker.addMovement(event);
-        switch (actionMasked) {
-            case MotionEvent.ACTION_DOWN:
-                isMoving = false;
-                mInitialX = x;
-                if (!mScroller.isFinished()) {
-                    mScroller.forceFinished(true);
-                }
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                // 只要第二手指按下，就禁止滑动
-                isScaling = true;
-                isMoving = false;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (isScaling) {
-                    break;
-                }
-                int dx = x - mLastX;
-                if (!isMoving) {
-                    final int dy = y - mLastY;
-                    if (Math.abs(x - mInitialX) <= SCROLL_SLOP || Math.abs(dx) <= Math.abs(dy)) {
-                        break;
-                    }
-                    isMoving = true;
-                }
-                mCurrentDistance -= dx;
-                computeTime();
-                break;
-            case MotionEvent.ACTION_UP:
-                if (isScaling || !isMoving) {
-                    break;
-                }
-                mVelocityTracker.computeCurrentVelocity(1000, MAX_VELOCITY);
-                final int xVelocity = (int) mVelocityTracker.getXVelocity();
-                if (Math.abs(xVelocity) >= MIN_VELOCITY) {
-                    // 惯性滑动
-                    final int maxDistance = (int) (MAX_TIME_VALUE / mUnitGap * mUnitGap);
-                    mScroller.fling((int) mCurrentDistance, 0, -xVelocity, 0, 0, maxDistance, 0, 0);
-                    invalidate();
-                }
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                // 两个中的有一个手指被抬起，允许滑动。同时把未抬起的手机当前位置赋给初始X
-                isScaling = false;
-                int restIndex = actionIndex == 0 ? 1 : 0;
-                mInitialX = (int) event.getX(restIndex);
-                break;
-            default:
-                break;
-        }
-        mLastX = x;
-        mLastY = y;
-        return true;
-    }
-
-    private void computeTime() {
-        // 不用转float，肯定能整除
-        float maxDistance = MAX_TIME_VALUE / mUnitSecond * mUnitGap;
-        // 限定范围
-        mCurrentDistance = Math.min(maxDistance, Math.max(0, mCurrentDistance));
-        currentTime = (int) (mCurrentDistance / mUnitGap * mUnitSecond);
-        if (mListener != null) {
-            mListener.onTimeChanged(currentTime);
-        }
-        invalidate();
-    }
+//    private void computeTime() {
+//        // 不用转float，肯定能整除
+//        float maxDistance = MAX_TIME_VALUE / mUnitSecond * mUnitGap;
+//        // 限定范围
+//        mCurrentDistance = Math.min(maxDistance, Math.max(0, mCurrentDistance));
+//        currentTime = (int) (mCurrentDistance / mUnitGap * mUnitSecond);
+//        if (mListener != null) {
+//            mListener.onTimeChanged(currentTime);
+//        }
+//        invalidate();
+//    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -450,13 +451,7 @@ public class TimeView extends View {
 //        drawTimeIndicator(canvas);
     }
 
-    @Override
-    public void computeScroll() {
-        if (mScroller.computeScrollOffset()) {
-            mCurrentDistance = mScroller.getCurrX();
-            computeTime();
-        }
-    }
+
 
     /**
      * 绘制刻度
@@ -470,59 +465,45 @@ public class TimeView extends View {
 
         // 刻度
         int start = 0;
+        int currentTime = 0;
         float offset = mHalfWidth - mCurrentDistance;
         final int perTextCount = mPerTextCounts[mPerTextCountIndex];
+        Log.d(TAG,"perTextCount:"+perTextCount);
         while (start <= MAX_TIME_VALUE) {
             // 时间数值
             if (start % perTextCount == 0) {
-                String text = formatTimeHHmm(start);
-                canvas.drawText(text, offset - mTextHalfWidth, hourLen , mTextPaint);
+                String text = formatTimeHHmmss(currentTime);
+                canvas.drawText(text, offset - mTextHalfWidth, secondLen , mTextPaint);
             }
 
 
             // 刻度
             if (start % 3600 == 0) {
                 // 时刻度
-//                canvas.drawLine(offset, hourLen+10, offset, hourLen+ gradationTextGap + gradationTextSize + 10, mPaint);
-//                canvas.drawLine(offset, hourLen+10, offset, mHeight, mPaint);
-                canvas.drawLine(offset, hourLen+10, offset, mHeight, mPaint);
+                canvas.drawLine(offset, secondLen+10, offset, mHeight, mPaint);
+                currentTime+=1;
             } else if (start % 60 == 0) {
                 // 分刻度
-//                canvas.drawLine(offset, hourLen+10, offset, minuteLen+ gradationTextGap + gradationTextSize + 10, mPaint);
-                canvas.drawLine(offset, hourLen+10, offset, mHeight, mPaint);
+                canvas.drawLine(offset, secondLen+10, offset, mHeight, mPaint);
+                currentTime+=1;
             } else {
                 // 秒刻度
 //                canvas.drawLine(offset, 0, offset, secondLen, mPaint);
             }
+
             start += mUnitSecond;
             offset += mUnitGap;
         }
         canvas.restore();
     }
 
-    /**
-     * 绘制当前时间指针
-     */
-    private void drawTimeIndicator(Canvas canvas) {
-        // 指针
-        mPaint.setColor(indicatorColor);
-        mPaint.setStrokeWidth(indicatorWidth);
-        canvas.drawLine(mHalfWidth, 0, mHalfWidth, mHeight * 2 / 3, mPaint);
-
-        // 正三角形
-        if (mTrianglePath.isEmpty()) {
-            //
-            final float halfSideLen = indicatorTriangleSideLen * .5f;
-            mTrianglePath.moveTo(mHalfWidth - halfSideLen, 0);
-            mTrianglePath.rLineTo(indicatorTriangleSideLen, 0);
-            mTrianglePath.rLineTo(-halfSideLen, (float) (Math.sin(Math.toRadians(60)) * halfSideLen));
-            mTrianglePath.close();
-        }
-        mPaint.setStrokeWidth(1);
-        mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawPath(mTrianglePath, mPaint);
-        mPaint.setStyle(Paint.Style.STROKE);
-    }
+//    @Override
+//    public void computeScroll() {
+//        if (mScroller.computeScrollOffset()) {
+//            mCurrentDistance = mScroller.getCurrX();
+//            computeTime();
+//        }
+//    }
 
 
     /**
@@ -549,21 +530,7 @@ public class TimeView extends View {
         return sb.toString();
     }
 
-    private static String formatTime(){
-        Calendar Cld = Calendar.getInstance();
-//        int YY = Cld.get(Calendar.YEAR) ;
-//        int MM = Cld.get(Calendar.MONTH)+1;
-//        int DD = Cld.get(Calendar.DATE);
-        int HH = Cld.get(Calendar.HOUR_OF_DAY);
-        int mm = Cld.get(Calendar.MINUTE);
-        int SS = Cld.get(Calendar.SECOND);
-//        int MI = Cld.get(Calendar.MILLISECOND);//毫秒
-        StringBuilder sb = new StringBuilder();
-        sb.append(HH).append(":");
-        sb.append(mm).append(":");
-        sb.append(SS);
-        return sb.toString();
-    }
+
 
     /**
      * 格式化时间 HH:mm:ss
@@ -625,7 +592,7 @@ public class TimeView extends View {
      *
      * @param currentTime 当前时间
      */
-    public void setCurrentTime(@IntRange(from = 0, to = MAX_TIME_VALUE) int currentTime) {
+    public void setCurrentTime(@FloatRange(from = 0, to = MAX_TIME_VALUE) float currentTime) {
         this.currentTime = currentTime;
         calculateValues();
         postInvalidate();

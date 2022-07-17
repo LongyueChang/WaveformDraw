@@ -30,10 +30,11 @@ import java.util.Calendar;
  * @email : changyl@yunxi.tv
  */
 public class DbView extends View {
-    private final String TAG = TimeView.class.getSimpleName();
+    private final String TAG = DbView.class.getSimpleName();
+
 
     private static final boolean LOG_ENABLE = true;
-    public static final int MAX_TIME_VALUE = 0;
+    public static final int MAX_TIME_VALUE = 24 * 3600;
 
     private int bgColor;
     /**
@@ -55,8 +56,7 @@ public class DbView extends View {
     /**
      * 秒、分、时刻度的长度
      */
-    private float secondLen;
-    private float minuteLen;
+    private float dbLen;
     private float hourLen;
     /**
      * 刻度数值颜色、大小、与时刻度的距离
@@ -160,7 +160,7 @@ public class DbView extends View {
     private TextPaint mTextPaint;
     private Path mTrianglePath;
     private Scroller mScroller;
-    private VelocityTracker mVelocityTracker;
+
 
     /**
      * 缩放手势检测器
@@ -170,13 +170,13 @@ public class DbView extends View {
     private int mWidth, mHeight;
     private int mHalfWidth;
 
+    /**
+     * 刻度按照屏幕宽等额分配分数
+     */
+    private int dbDivision=61;
 
-    private int mInitialX;
-    private int mLastX, mLastY;
-    private boolean isMoving;
-    private boolean isScaling;
 
-    private TimeView.OnTimeChangedListener mListener;
+    private OnTimeChangedListener mListener;
 
     public interface OnTimeChangedListener {
         void onTimeChanged(int newTimeValue);
@@ -198,7 +198,7 @@ public class DbView extends View {
         init(context);
         initScaleGestureDetector(context);
 
-        mTextHalfWidth = mTextPaint.measureText("00:00") * .5f;
+        mTextHalfWidth = mTextPaint.measureText("-60") * .5f;
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         SCROLL_SLOP = viewConfiguration.getScaledTouchSlop();
         MIN_VELOCITY = viewConfiguration.getScaledMinimumFlingVelocity();
@@ -214,11 +214,10 @@ public class DbView extends View {
         partHeight = ta.getDimension(R.styleable.TimeRuleView_trv_partHeight, dp2px(20));
         partColor = ta.getColor(R.styleable.TimeRuleView_trv_partColor, Color.parseColor("#F58D24"));
         gradationWidth = ta.getDimension(R.styleable.TimeRuleView_trv_gradationWidth, 1);
-        secondLen = ta.getDimension(R.styleable.TimeRuleView_trv_secondLen, dp2px(3));
-        minuteLen = ta.getDimension(R.styleable.TimeRuleView_trv_minuteLen, dp2px(10));
-        hourLen = ta.getDimension(R.styleable.TimeRuleView_trv_hourLen, dp2px(10));
-        gradationTextColor = ta.getColor(R.styleable.TimeRuleView_trv_gradationTextColor, Color.GRAY);
-        gradationTextSize = ta.getDimension(R.styleable.TimeRuleView_trv_gradationTextSize, sp2px(12));
+        dbLen = ta.getDimension(R.styleable.TimeRuleView_trv_minuteLen, dp2px(6));
+        hourLen = ta.getDimension(R.styleable.TimeRuleView_trv_hourLen, dp2px(4));
+        gradationTextColor = ta.getColor(R.styleable.TimeRuleView_trv_gradationTextColor, Color.parseColor("#FFFFFF"));
+        gradationTextSize = ta.getDimension(R.styleable.TimeRuleView_trv_gradationTextSize, sp2px(8));
         gradationTextGap = ta.getDimension(R.styleable.TimeRuleView_trv_gradationTextGap, dp2px(2));
         currentTime = ta.getInt(R.styleable.TimeRuleView_trv_currentTime, 0);
         indicatorTriangleSideLen = ta.getDimension(R.styleable.TimeRuleView_trv_indicatorTriangleSideLen, dp2px(15));
@@ -229,7 +228,6 @@ public class DbView extends View {
 
     private void calculateValues() {
         mCurrentDistance = Float.parseFloat(currentTime+"")/Float.parseFloat(mUnitSecond+"") * mUnitGap;
-//        logD("distance:"+mCurrentDistance);
     }
 
     private void init(Context context) {
@@ -285,13 +283,13 @@ public class DbView extends View {
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
                 logD("onScaleBegin...");
-                isScaling = true;
+
                 return true;
             }
 
             @Override
             public void onScaleEnd(ScaleGestureDetector detector) {
-                isScaling = false;
+
                 logD("onScaleEnd...");
             }
         });
@@ -341,86 +339,13 @@ public class DbView extends View {
         mWidth = MeasureSpec.getSize(widthMeasureSpec);
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
 
-        // 只处理wrap_content的高度，设置为80dp
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
             mHeight = dp2px(60);
         }
-//        mHalfWidth = mWidth >> 1;
+
         mHalfWidth = 0;
 
         setMeasuredDimension(mWidth, mHeight);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        final int actionIndex = event.getActionIndex();
-        int pointerId = event.getPointerId(actionIndex);
-        final int actionMasked = event.getActionMasked();
-        final int action = event.getAction();
-        final int pointerCount = event.getPointerCount();
-        logD("onTouchEvent: isScaling=%b, actionIndex=%d, pointerId=%d, actionMasked=%d, action=%d, pointerCount=%d",
-                isScaling, actionIndex, pointerId, actionMasked, action, pointerCount);
-        final int x = (int) event.getX();
-        final int y = (int) event.getY();
-        mScaleGestureDetector.onTouchEvent(event);
-
-        if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
-        }
-        mVelocityTracker.addMovement(event);
-        switch (actionMasked) {
-            case MotionEvent.ACTION_DOWN:
-                isMoving = false;
-                mInitialX = x;
-                if (!mScroller.isFinished()) {
-                    mScroller.forceFinished(true);
-                }
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                // 只要第二手指按下，就禁止滑动
-                isScaling = true;
-                isMoving = false;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (isScaling) {
-                    break;
-                }
-                int dx = x - mLastX;
-                if (!isMoving) {
-                    final int dy = y - mLastY;
-                    if (Math.abs(x - mInitialX) <= SCROLL_SLOP || Math.abs(dx) <= Math.abs(dy)) {
-                        break;
-                    }
-                    isMoving = true;
-                }
-                mCurrentDistance -= dx;
-                computeTime();
-                break;
-            case MotionEvent.ACTION_UP:
-                if (isScaling || !isMoving) {
-                    break;
-                }
-                mVelocityTracker.computeCurrentVelocity(1000, MAX_VELOCITY);
-                final int xVelocity = (int) mVelocityTracker.getXVelocity();
-                if (Math.abs(xVelocity) >= MIN_VELOCITY) {
-                    // 惯性滑动
-                    final int maxDistance = (int) (MAX_TIME_VALUE / mUnitGap * mUnitGap);
-                    mScroller.fling((int) mCurrentDistance, 0, -xVelocity, 0, 0, maxDistance, 0, 0);
-                    invalidate();
-                }
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                // 两个中的有一个手指被抬起，允许滑动。同时把未抬起的手机当前位置赋给初始X
-                isScaling = false;
-                int restIndex = actionIndex == 0 ? 1 : 0;
-                mInitialX = (int) event.getX(restIndex);
-                break;
-            default:
-                break;
-        }
-        mLastX = x;
-        mLastY = y;
-        return true;
     }
 
     private void computeTime() {
@@ -463,27 +388,37 @@ public class DbView extends View {
     private void drawRule(Canvas canvas) {
         // 移动画布坐标系
         canvas.save();
-        canvas.translate(0, partHeight);
         mPaint.setColor(gradationColor);
         mPaint.setStrokeWidth(gradationWidth);
 
         // 刻度
-        int start = 60;
-        float offset = mHalfWidth - mCurrentDistance;
-        final int perTextCount = mPerTextCounts[mPerTextCountIndex];
-        while (start <= MAX_TIME_VALUE) {
+        int start = 0;
+
+        float offset = mWidth/dbDivision+dp2px(5);
+        Log.d(TAG,"offset:"+offset+";mWidth:"+mWidth);
+
+
+
+        while (start <= 60) {
             // 时间数值
-            if (start % perTextCount == 0) {
-                String text = formatDb(start);
-                Log.d(TAG,"formatDb:"+text);
-                canvas.drawText(text, offset - mTextHalfWidth, hourLen , mTextPaint);
+            if (start % 3 == 0) {
+                String text = formatDbText(start);
+                Log.d(TAG,"text:"+text);
+                canvas.drawText(text, offset - mTextHalfWidth, hourLen + gradationTextGap + gradationTextSize + 10 , mTextPaint);
             }
 
-            canvas.drawLine(offset, hourLen+10, offset, mHeight, mPaint);
+            Log.d(TAG,"draw line count:"+start+";offset:"+offset);
+            if(start%3==0){
+                canvas.drawLine(offset, 0, offset, dbLen, mPaint);
+            } else {
+                //细分db刻度
+                canvas.drawLine(offset, 0, offset, hourLen, mPaint);
+            }
 
-            start -= 3;
-            offset += mUnitGap;
+            start += 1;
+            offset +=  mWidth/dbDivision;
         }
+
         canvas.restore();
     }
 
@@ -512,35 +447,18 @@ public class DbView extends View {
     }
 
 
-    /**
-     * 格式化时间 HH:mm
-     *
-     * @param timeValue 具体时间值
-     * @return 格式化后的字符串，eg：3600 to 01:00
-     */
-    public static String formatTimeHHmm(@IntRange(from = 0, to = MAX_TIME_VALUE) int timeValue) {
-        if (timeValue < 0) {
-            timeValue = 0;
-        }
-        int hour = timeValue / 3600;
-        int minute = timeValue % 3600 / 60;
+    private static String formatDbText(int startIdx){
         StringBuilder sb = new StringBuilder();
-        if (hour < 10) {
-            sb.append('0');
+        if(startIdx==0){
+            sb.append("dB");
+            return sb.toString();
+        } else if(startIdx==60){
+            //空格占位 -
+            sb.append("  ").append(0);
+            return sb.toString();
         }
-        sb.append(hour).append(':');
-        if (minute < 10) {
-            sb.append('0');
-        }
-        sb.append(minute);
+        sb.append("-").append(60-startIdx);
         return sb.toString();
-    }
-
-    private String formatDb(int start){
-        if(start==60){
-            return "db";
-        }
-        return "-"+start;
     }
 
 
@@ -557,26 +475,5 @@ public class DbView extends View {
         if (LOG_ENABLE) {
             Log.d("MoneySelectRuleView", String.format( format, args));
         }
-    }
-
-    /**
-     * 设置时间变化监听事件
-     *
-     * @param listener 监听回调
-     */
-    public void setOnTimeChangedListener(TimeView.OnTimeChangedListener listener) {
-        this.mListener = listener;
-    }
-
-
-    /**
-     * 设置当前时间
-     *
-     * @param currentTime 当前时间
-     */
-    public void setCurrentTime(@IntRange(from = 0, to = MAX_TIME_VALUE) int currentTime) {
-        this.currentTime = currentTime;
-        calculateValues();
-        postInvalidate();
     }
 }

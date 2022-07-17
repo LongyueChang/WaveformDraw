@@ -64,20 +64,21 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
             super.handleMessage(msg);
             switch (msg.what){
                 case MicManager.MODE_RECORD_FILE:
-                    currentTime=currentTime+2;
+                    currentTime=currentTime+1.4f;
                     timeRuleView.setCurrentTime(currentTime);
 
 //                    bsv_singleChannel.addAudioData((byte[])msg.obj, msg.arg1, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
                     bsv_singleChannel.addAudioData((byte[])msg.obj,16000, Constant.SINGLE_CHANNEL_SAMPLEER_RATE, Constant.SINGLE_CHANNLE_BIT_WIDTH, false);
 
 
-                    float recordVolume = YunxiAudioWrapper.getRecordVolume();
-                    double showVolume = 100 +recordVolume*2;
-                    if(showVolume<0){
-                        showVolume=0;
-                    }
-                    Log.d(TAG,"showVolume:"+showVolume);
-                    voiceDbView.setVoice((int) showVolume);
+                    // TODO: 2022/7/17
+//                    float recordVolume = YunxiAudioWrapper.getRecordVolume();
+//                    double showVolume = 100 +recordVolume*2;
+//                    if(showVolume<0){
+//                        showVolume=0;
+//                    }
+//                    Log.d(TAG,"showVolume:"+showVolume);
+//                    voiceDbView.setVoice((int) showVolume);
                     break;
 //                case MicManager.MODE_VOLUME:
 ////                    Random random = new Random();
@@ -110,7 +111,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
         initData();
     }
 
-    private int currentTime = 0;
+    private float currentTime = 0;
     private void initData() {
 
 //        List<TimeRuleView.TimePart> timeParts = new ArrayList<>();
