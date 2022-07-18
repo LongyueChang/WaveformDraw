@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/audio_bg_width"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+
+
+    <com.yunxi.voiceview.TimeView
+        android:id="@+id/time_rule_view"
+        android:layout_width="@dimen/audio_bg_width"
+        android:layout_height="@dimen/audio_time_text_height"
+        tools:ignore="MissingConstraints" />
+
+    <com.yunxi.voiceview.AudioSurfaceView
+        android:layout_below="@+id/time_rule_view"
+        android:layout_width="@dimen/audio_surface_width"
+        android:layout_height="@dimen/audio_surface_height"
+        android:id="@+id/bsv_singleChannel"
+        tools:ignore="MissingConstraints" />
+
+    <com.yunxi.voiceview.AudioDbText
+        android:layout_below="@+id/time_rule_view"
+        android:layout_toEndOf="@+id/bsv_singleChannel"
+        android:layout_width="@dimen/audio_surface_db_text_width"
+        android:layout_height="@dimen/audio_surface_height"
+        android:id="@+id/voice_db" />
+
+    <com.yunxi.voiceview.VoiceDbView
+        android:id="@+id/voiceDb_view"
+        android:layout_width="@dimen/audio_db_view_width"
+        android:layout_height="@dimen/audio_db_view_height"
+        android:layout_below="@+id/bsv_singleChannel"
+        tools:ignore="MissingConstraints" />
+
+    <com.yunxi.voiceview.VoiceDbText
+        android:id="@+id/voiceDb_text"
+        android:layout_width="@dimen/audio_bg_width"
+        android:layout_height="@dimen/audio_time_text_height"
+        android:layout_below="@+id/voiceDb_view" />
+
+</RelativeLayout>

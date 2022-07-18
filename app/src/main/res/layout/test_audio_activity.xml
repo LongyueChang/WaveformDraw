@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent">
+
+
+
+    <com.yunxi.voiceview.VoiceGroup
+        android:id="@+id/title_view"
+        android:layout_width="@dimen/audio_bg_width"
+        android:layout_height="@dimen/audio_bg_height"/>
+
+</android.support.v7.widget.LinearLayoutCompat>

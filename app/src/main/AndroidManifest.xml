@@ -24,6 +24,8 @@
         <activity android:name=".SingleFileActivity"/>
         <activity android:name=".DoubleChannelActivity"/>
         <activity android:name=".DoubleFileActivity"/>
+
+        <activity android:name=".TestAudioActivity"/>
     </application>
 
 </manifest>

@@ -24,7 +24,7 @@ import com.yunxi.voiceview.VoiceDbView;
 public class SingleChannelActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = SingleChannelActivity.class.getSimpleName();
-    private AudioSurfaceView bsv_singleChannel;
+
     private ImageView iv_singleChannel;
     private MicManager manager=null;
     private TitleView title_view;
@@ -33,6 +33,7 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
     private VoiceDbView voiceDbView;
     private VoiceDbText dbView;
     private TimeView timeRuleView;
+    private AudioSurfaceView bsv_singleChannel;
 
 
     private Handler handler= new Handler(){
@@ -49,8 +50,8 @@ public class SingleChannelActivity extends AppCompatActivity implements View.OnC
 
 
                     // TODO: 2022/7/17
-//                    float recordVolume = YunxiAudioWrapper.getRecordVolume();
-                    voiceDbView.setVoice(-32);
+                    float recordVolume = YunxiAudioWrapper.getRecordVolume();
+                    voiceDbView.setVoice(recordVolume);
                     break;
 //                case MicManager.MODE_VOLUME:
 ////                    Random random = new Random();

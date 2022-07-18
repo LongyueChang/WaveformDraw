@@ -1,0 +1,16 @@
+<resources>
+    <dimen name="audio_bg_width">330dp</dimen>
+    <dimen name="audio_bg_height">282dp</dimen>
+
+    <dimen name="audio_surface_db_text_width">16dp</dimen>
+
+    <dimen name="audio_time_text_height">16dp</dimen>
+    <dimen name="audio_surface_width">314dp</dimen>
+    <dimen name="audio_surface_height">250dp</dimen>
+
+    <dimen name="audio_db_view_width">330dp</dimen>
+    <dimen name="audio_db_view_height">16dp</dimen>
+
+    <dimen name="audio_db_text_pre_height">4dp</dimen>
+
+</resources>

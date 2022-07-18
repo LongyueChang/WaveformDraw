@@ -46,4 +46,12 @@
         android:layout_height="wrap_content"
         />
 
+    <Button
+        app:layout_constraintTop_toBottomOf="@+id/single_audio_view"
+        android:id="@+id/btn_test_audio"
+        android:text="自定义绘图"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
 </android.support.constraint.ConstraintLayout>
